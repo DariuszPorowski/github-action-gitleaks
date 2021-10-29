@@ -1,5 +1,5 @@
-name: Gitleaks
-description: Run Gitleaks
+name: Gitleaks Scanner
+description: Run Gitleaks in your CI/CD pipeline
 branding:
   color: purple
   icon: shield
