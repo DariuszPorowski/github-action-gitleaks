@@ -91,20 +91,26 @@ CAPTURE_OUTPUT=$(eval "${command}")
 
 if [ $? -eq 1 ]
 then
-    GITLEAKS_RESULT=$(echo -e "\e[31m🛑 STOP! Gitleaks encountered leaks or error")
-    echo "${GITLEAKS_RESULT}"
+    echo "----------------------------------"
     echo "::set-output name=exitcode::${GITLEAKS_RESULT}"
     echo "----------------------------------"
     echo "${CAPTURE_OUTPUT}"
     echo "::set-output name=result::${CAPTURE_OUTPUT}"
     echo "----------------------------------"
+    GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
+    echo -e "\e[31m🛑 ${GITLEAKS_RESULT}"
     if [ "${INPUT_FAIL}" = "true" ]
     then
+        echo "::error::${GITLEAKS_RESULT}"
         exit 1
+    else
+        echo "::warning::${GITLEAKS_RESULT}"
     fi
 else
-    GITLEAKS_RESULT=$(echo -e "\e[32m✅ SUCCESS! Your code is good to go!")
-    echo "${GITLEAKS_RESULT}"
+    echo "------------------------------------"
     echo "::set-output name=exitcode::${GITLEAKS_RESULT}"
     echo "------------------------------------"
+    GITLEAKS_RESULT="SUCCESS! Your code is good to go!"
+    echo -e "\e[32m✅ ${GITLEAKS_RESULT}"
+    echo "::notice::${GITLEAKS_RESULT}"
 fi
