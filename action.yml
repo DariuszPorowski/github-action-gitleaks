@@ -5,7 +5,7 @@ branding:
   icon: shield
 inputs:
   path:
-    description: "Path to directory"
+    description: "Path to scan"
     required: false
     default: ${{ github.workspace }}
   config-path:
@@ -14,20 +14,17 @@ inputs:
     default: ".github/.gitleaks.toml"
   format:
     description: "Report file format: json, csv, sarif (default: json)"
-    required: false
+    required: true
     default: "json"
   no-git:
     description: "Treat git repos as plain directories and scan those file"
     required: false
-    default: "false"
   redact:
     description: "Redact secrets from log messages and leaks"
     required: false
-    default: "false"
   depth:
     description: "Number of commits to scan"
     required: false
-    default: ""
   fail:
     description: "Fail if secrets founded"
     required: false
@@ -35,17 +32,18 @@ inputs:
   verbose:
     description: "Show verbose output from scan"
     required: false
-    default: "false"
   debug:
     description: "Log debug messages"
     required: false
-    default: "false"
 
 outputs:
-  result: # id of output
-    description: "Gitleaks log output"
   exitcode: # id of output
     description: "Success for failure value from scan"
+  result: # id of output
+    description: "Gitleaks log output"
+  report: # id of output
+    description: "Report file path"
+
 runs:
   using: "docker"
   image: "Dockerfile"

@@ -73,6 +73,7 @@ command=$(arg "${command}" '--format=%s' "${INPUT_FORMAT}")
 command=$(arg "${command}" '--redact' "${INPUT_REDACT}")
 command=$(arg "${command}" '--verbose' "${INPUT_VERBOSE}")
 command=$(arg "${command}" '--debug' "${INPUT_DEBUG}")
+command=$(arg "${command}" '--report=%s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}")
 
 if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]
 then
@@ -92,10 +93,12 @@ CAPTURE_OUTPUT=$(eval "${command}")
 if [ $? -eq 1 ]
 then
     echo "----------------------------------"
-    echo "::set-output name=exitcode::${GITLEAKS_RESULT}"
+    echo "::set-output name=exitcode::1"
     echo "----------------------------------"
     echo "${CAPTURE_OUTPUT}"
     echo "::set-output name=result::${CAPTURE_OUTPUT}"
+    echo "----------------------------------"
+    echo "::set-output name=report::${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}"
     echo "----------------------------------"
     GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
     echo -e "\e[31m🛑 ${GITLEAKS_RESULT}"
@@ -107,9 +110,11 @@ then
         echo "::warning::${GITLEAKS_RESULT}"
     fi
 else
-    echo "------------------------------------"
-    echo "::set-output name=exitcode::${GITLEAKS_RESULT}"
-    echo "------------------------------------"
+    echo "----------------------------------"
+    echo "::set-output name=exitcode::0"
+    echo "----------------------------------"
+    echo "::set-output name=report::${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}"
+    echo "----------------------------------"
     GITLEAKS_RESULT="SUCCESS! Your code is good to go!"
     echo -e "\e[32m✅ ${GITLEAKS_RESULT}"
     echo "::notice::${GITLEAKS_RESULT}"
