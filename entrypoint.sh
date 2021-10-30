@@ -12,33 +12,33 @@ declare INPUT_DEBUG=""
 
 while getopts ":p:c:f:n:r:i:b:v:d:" args
 do
-    case "${args}" in
+    case ${args} in
         p)
-            INPUT_PATH="${OPTARG}"
+            INPUT_PATH=${OPTARG}
         ;;
         c)
-            INPUT_CONFIG_PATH="${OPTARG}"
+            INPUT_CONFIG_PATH=${OPTARG}
         ;;
         f)
-            INPUT_FORMAT="${OPTARG}"
+            INPUT_FORMAT=${OPTARG}
         ;;
         n)
-            INPUT_NO_GIT="${OPTARG}"
+            INPUT_NO_GIT=${OPTARG}
         ;;
         r)
-            INPUT_REDACT="${OPTARG}"
+            INPUT_REDACT=${OPTARG}
         ;;
         i)
-            INPUT_DEPTH="${OPTARG}"
+            INPUT_DEPTH=${OPTARG}
         ;;
         b)
-            INPUT_FAIL="${OPTARG}"
+            INPUT_FAIL=${OPTARG}
         ;;
         v)
-            INPUT_VERBOSE="${OPTARG}"
+            INPUT_VERBOSE=${OPTARG}
         ;;
         d)
-            INPUT_DEBUG="${OPTARG}"
+            INPUT_DEBUG=${OPTARG}
         ;;
         \?)
             echo "Invalid options found: ${OPTARG}."
@@ -47,8 +47,6 @@ do
     esac
 done
 shift $((OPTIND - 1))
-
-declare CONFIG=""
 
 function arg(){
     local _command="${1}"
