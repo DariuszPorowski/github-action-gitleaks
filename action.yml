@@ -10,10 +10,11 @@ inputs:
   config-path:
     description: "Path to config (relative to $GITHUB_WORKSPACE)"
     required: false
-    default: ".github/.gitleaks.toml"
+    default: ".gitleaks/gitleaks.toml"
   additional-config:
     description: "Path to an additional gitleaks config to append with an existing config (relative to $GITHUB_WORKSPACE)"
     required: false
+    default: ".gitleaks/UDMSecretChecks.toml"
   format:
     description: "Report file format: json, csv, sarif (default: json)"
     required: true

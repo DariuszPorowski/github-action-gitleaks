@@ -6,18 +6,20 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 ## Inputs
 
-| Name              | Required | Default value          | Description                                                                                             |
-| ----------------- | -------- | ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| path              | false    | GitHub Workspace       | Path to scan (relative to $GITHUB_WORKSPACE)                                                            |
-| config-path       | false    | .github/.gitleaks.toml | Path to config (relative to $GITHUB_WORKSPACE)                                                          |
-| additional-config | false    |                        | Path to an additional gitleaks config to append with an existing config (relative to $GITHUB_WORKSPACE) |
-| format            | true     | json                   | Report file format: json, csv, sarif                                                                    |
-| no-git            | false    |                        | Treat git repos as plain directories and scan those file                                                |
-| redact            | false    |                        | Redact secrets from log messages and leaks                                                              |
-| depth             | false    |                        | Number of commits to scan                                                                               |
-| fail              | false    | true                   | Fail if secrets founded                                                                                 |
-| verbose           | false    |                        | Show verbose output from scan                                                                           |
-| debug             | false    |                        | Log debug messages                                                                                      |
+| Name              | Required | Default value                  | Description                                                                                             |
+| ----------------- | -------- | ------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| path              | false    | GitHub Workspace               | Path to scan (relative to $GITHUB_WORKSPACE)                                                            |
+| config-path       | false    | .gitleaks/gitleaks.toml        | Path to config (relative to $GITHUB_WORKSPACE)                                                          |
+| additional-config | false    | .gitleaks/UDMSecretChecks.toml | Path to an additional gitleaks config to append with an existing config (relative to $GITHUB_WORKSPACE) |
+| format            | true     | json                           | Report file format: json, csv, sarif                                                                    |
+| no-git            | false    |                                | Treat git repos as plain directories and scan those file                                                |
+| redact            | false    |                                | Redact secrets from log messages and leaks                                                              |
+| depth             | false    |                                | Number of commits to scan                                                                               |
+| fail              | false    | true                           | Fail if secrets founded                                                                                 |
+| verbose           | false    |                                | Show verbose output from scan                                                                           |
+| debug             | false    |                                | Log debug messages                                                                                      |
+
+> NOTE: The solution does not provide any configuration. You have to do it yourself. The existing one in the repo is just for testing purpose.
 
 ## Outputs
 
@@ -45,6 +47,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
     echo "result: ${{ steps.gitleaks.outputs.result }}"
     echo "report: ${{ steps.gitleaks.outputs.report }}"
 - name: Upload SARIF report
+  if: steps.gitleaks.outputs.exitcode == 1
   uses: github/codeql-action/upload-sarif@v1
   with:
     sarif_file: ${{ steps.gitleaks.outputs.report }}

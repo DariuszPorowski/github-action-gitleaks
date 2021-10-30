@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Run Gitleaks
         id: gitleaks
-        uses: DariuszPorowski/github-action-gitleaks@v1.0.7
+        uses: DariuszPorowski/github-action-gitleaks@v1.0.8
         with:
           format: "sarif"
           fail: false
@@ -20,6 +20,7 @@ jobs:
           echo "result: ${{ steps.gitleaks.outputs.result }}"
           echo "report: ${{ steps.gitleaks.outputs.report }}"
       - name: Upload SARIF report
+        if: steps.gitleaks.outputs.exitcode == 1
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: ${{ steps.gitleaks.outputs.report }}
