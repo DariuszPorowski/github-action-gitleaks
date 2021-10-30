@@ -12,6 +12,9 @@ inputs:
     description: "Path to config (relative to $GITHUB_WORKSPACE)"
     required: false
     default: ".github/.gitleaks.toml"
+  additional-config:
+    description: "Path to an additional gitleaks config to append with an existing config (relative to $GITHUB_WORKSPACE)"
+    required: false
   format:
     description: "Report file format: json, csv, sarif (default: json)"
     required: true
@@ -50,6 +53,7 @@ runs:
   args:
     - -p ${{ inputs.path }}
     - -c ${{ inputs.config-path }}
+    - -a ${{ inputs.additional-config }}
     - -f ${{ inputs.format }}
     - -n ${{ inputs.no-git }}
     - -r ${{ inputs.redact }}
