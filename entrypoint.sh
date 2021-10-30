@@ -2,6 +2,7 @@
 
 declare INPUT_PATH=""
 declare INPUT_CONFIG_PATH=""
+declare INPUT_ADDITIONAL_CONFIG=""
 declare INPUT_FORMAT=""
 declare INPUT_NO_GIT=""
 declare INPUT_REDACT=""
@@ -10,38 +11,41 @@ declare INPUT_FAIL=""
 declare INPUT_VERBOSE=""
 declare INPUT_DEBUG=""
 
-while getopts ":p:c:f:n:r:i:b:v:d:" args
+while getopts ":p:c:a:f:n:r:i:b:v:d:" args
 do
-    case ${args} in
+    case "${args}" in
         p)
-            INPUT_PATH=${OPTARG}
+            INPUT_PATH=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         c)
-            INPUT_CONFIG_PATH=${OPTARG}
+            INPUT_CONFIG_PATH=$(echo "${OPTARG}" | awk '{$1=$1}1')
+        ;;
+        a)
+            INPUT_ADDITIONAL_CONFIG=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         f)
-            INPUT_FORMAT=${OPTARG}
+            INPUT_FORMAT=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         n)
-            INPUT_NO_GIT=${OPTARG}
+            INPUT_NO_GIT=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         r)
-            INPUT_REDACT=${OPTARG}
+            INPUT_REDACT=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         i)
-            INPUT_DEPTH=${OPTARG}
+            INPUT_DEPTH=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         b)
-            INPUT_FAIL=${OPTARG}
+            INPUT_FAIL=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         v)
-            INPUT_VERBOSE=${OPTARG}
+            INPUT_VERBOSE=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         d)
-            INPUT_DEBUG=${OPTARG}
+            INPUT_DEBUG=$(echo "${OPTARG}" | awk '{$1=$1}1')
         ;;
         \?)
-            echo "Invalid options found: ${OPTARG}."
+            echo "Invalid options found: "${OPTARG}"."
             exit 1
         ;;
     esac
@@ -62,10 +66,33 @@ function arg(){
     echo "${_command}${_arg}"
 }
 
+echo "----------------------------------"
+echo "INPUT PARAMETERS"
+echo "----------------------------------"
+echo "INPUT_PATH: ${INPUT_PATH}"
+echo "INPUT_CONFIG_PATH: ${INPUT_CONFIG_PATH}"
+echo "INPUT_ADDITIONAL_CONFIG: ${INPUT_ADDITIONAL_CONFIG}"
+echo "INPUT_FORMAT: ${INPUT_FORMAT}"
+echo "INPUT_NO_GIT: ${INPUT_NO_GIT}"
+echo "INPUT_REDACT: ${INPUT_REDACT}"
+echo "INPUT_DEPTH: ${INPUT_DEPTH}"
+echo "INPUT_FAIL: ${INPUT_FAIL}"
+echo "INPUT_VERBOSE: ${INPUT_VERBOSE}"
+echo "INPUT_DEBUG: ${INPUT_DEBUG}"
+echo "----------------------------------"
+
 command="gitleaks"
 if [ -f "${GITHUB_WORKSPACE}/${INPUT_CONFIG_PATH}" ]
 then
     command=$(arg "${command}" '--config-path=%s' "${GITHUB_WORKSPACE}/${INPUT_CONFIG_PATH}")
+fi
+if [ -f "${GITHUB_WORKSPACE}/${INPUT_ADDITIONAL_CONFIG}" ]
+then
+    command=$(arg "${command}" '--additional-config=%s' "${GITHUB_WORKSPACE}/${INPUT_ADDITIONAL_CONFIG}")
+fi
+if [ "${#INPUT_FORMAT}" = 0 ]
+then
+    INPUT_FORMAT="json"
 fi
 command=$(arg "${command}" '--format=%s' "${INPUT_FORMAT}")
 command=$(arg "${command}" '--redact' "${INPUT_REDACT}")
@@ -85,16 +112,17 @@ else
 fi
 
 echo "Running gitleaks $(gitleaks --version)"
+echo "----------------------------------"
 echo "${command}"
-CAPTURE_OUTPUT=$(eval "${command}")
+COMMAND_OUTPUT=$(eval "${command}")
 
 if [ $? -eq 1 ]
 then
     echo "----------------------------------"
     echo "::set-output name=exitcode::1"
     echo "----------------------------------"
-    echo "${CAPTURE_OUTPUT}"
-    echo "::set-output name=result::${CAPTURE_OUTPUT}"
+    echo "${COMMAND_OUTPUT}"
+    echo "::set-output name=result::${COMMAND_OUTPUT}"
     echo "----------------------------------"
     echo "::set-output name=report::${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}"
     echo "----------------------------------"
