@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Run Gitleaks
         id: gitleaks
-        uses: DariuszPorowski/github-action-gitleaks@v1.0.1
+        uses: DariuszPorowski/github-action-gitleaks@v1.0.2
         with:
           format: "sarif"
           fail: false
