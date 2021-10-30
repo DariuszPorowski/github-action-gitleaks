@@ -8,7 +8,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 | Name              | Required | Default value          | Description                                                                                             |
 | ----------------- | -------- | ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| path              | false    | $GITHUB_WORKSPACE      | Path to scan                                                                                            |
+| path              | false    | GitHub Workspace       | Path to scan (relative to $GITHUB_WORKSPACE)                                                            |
 | config-path       | false    | .github/.gitleaks.toml | Path to config (relative to $GITHUB_WORKSPACE)                                                          |
 | additional-config | false    |                        | Path to an additional gitleaks config to append with an existing config (relative to $GITHUB_WORKSPACE) |
 | format            | true     | json                   | Report file format: json, csv, sarif                                                                    |
@@ -34,7 +34,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
   uses: actions/checkout@v2
 - name: Run Gitleaks
   id: gitleaks
-  uses: DariuszPorowski/github-action-gitleaks@v1.0.5
+  uses: DariuszPorowski/github-action-gitleaks@v1.0.7
   with:
     config-path: ".github/.myconfig.toml"
     format: "sarif"

@@ -5,9 +5,8 @@ branding:
   icon: shield
 inputs:
   path:
-    description: "Path to scan"
+    description: "Path to scan (relative to $GITHUB_WORKSPACE)"
     required: false
-    default: ${{ github.workspace }}
   config-path:
     description: "Path to config (relative to $GITHUB_WORKSPACE)"
     required: false
