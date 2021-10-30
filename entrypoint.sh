@@ -82,13 +82,13 @@ echo "INPUT_DEBUG: ${INPUT_DEBUG}"
 echo "----------------------------------"
 
 command="gitleaks"
-if [ -f "${GITHUB_WORKSPACE}/${INPUT_CONFIG_PATH}" ]
+if [ -f "${INPUT_CONFIG_PATH}" ]
 then
-    command=$(arg "${command}" '--config-path=%s' "${GITHUB_WORKSPACE}/${INPUT_CONFIG_PATH}")
+    command=$(arg "${command}" '--config-path=%s' "${INPUT_CONFIG_PATH}")
 fi
-if [ -f "${GITHUB_WORKSPACE}/${INPUT_ADDITIONAL_CONFIG}" ]
+if [ -f "${INPUT_ADDITIONAL_CONFIG}" ]
 then
-    command=$(arg "${command}" '--additional-config=%s' "${GITHUB_WORKSPACE}/${INPUT_ADDITIONAL_CONFIG}")
+    command=$(arg "${command}" '--additional-config=%s' "${INPUT_ADDITIONAL_CONFIG}")
 fi
 if [ "${#INPUT_FORMAT}" = 0 ]
 then
@@ -98,14 +98,13 @@ command=$(arg "${command}" '--format=%s' "${INPUT_FORMAT}")
 command=$(arg "${command}" '--redact' "${INPUT_REDACT}")
 command=$(arg "${command}" '--verbose' "${INPUT_VERBOSE}")
 command=$(arg "${command}" '--debug' "${INPUT_DEBUG}")
-command=$(arg "${command}" '--report=%s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}")
+command=$(arg "${command}" '--report=%s' "gitleaks-report.${INPUT_FORMAT}")
 
 if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]
 then
     git --git-dir="${GITHUB_WORKSPACE}/.git" log --left-right --cherry-pick --pretty=format:"%H" remotes/origin/${GITHUB_BASE_REF}... > commits.txt
     command=$(arg "${command}" '--commits-file=%s' "${GITHUB_WORKSPACE}/commits.txt")
     command=$(arg "${command}" '--depth=%s' "${INPUT_DEPTH}")
-    command=$(arg "${command}" '--path=%s' "${GITHUB_WORKSPACE}")
 else
     command=$(arg "${command}" '--path=%s' "${INPUT_PATH}")
     command=$(arg "${command}" '--no-git' "${INPUT_NO_GIT}")
@@ -124,7 +123,7 @@ then
     echo "${COMMAND_OUTPUT}"
     echo "::set-output name=result::${COMMAND_OUTPUT}"
     echo "----------------------------------"
-    echo "::set-output name=report::${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}"
+    echo "::set-output name=report::gitleaks-report.${INPUT_FORMAT}"
     echo "----------------------------------"
     GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
     echo -e "\e[31m🛑 ${GITLEAKS_RESULT}"
@@ -139,7 +138,7 @@ else
     echo "----------------------------------"
     echo "::set-output name=exitcode::0"
     echo "----------------------------------"
-    echo "::set-output name=report::${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}"
+    echo "::set-output name=report::gitleaks-report.${INPUT_FORMAT}"
     echo "----------------------------------"
     GITLEAKS_RESULT="SUCCESS! Your code is good to go!"
     echo -e "\e[32m✅ ${GITLEAKS_RESULT}"
