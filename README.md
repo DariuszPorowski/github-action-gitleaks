@@ -37,7 +37,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 - name: Run Gitleaks
   id: gitleaks
-  uses: DariuszPorowski/github-action-gitleaks@v1.0.1
+  uses: DariuszPorowski/github-action-gitleaks@v1.0.2
   with:
     config-path: ".github/.myconfig.toml"
     format: "sarif"

@@ -50,7 +50,7 @@ outputs:
 runs:
   using: "docker"
   # image: "Dockerfile"
-  image: "docker://ghcr.io/dariuszporowski/github-action-gitleaks/gitleaks:latest"
+  image: "docker://ghcr.io/dariuszporowski/github-action-gitleaks:latest"
   args:
     - -p ${{ inputs.path }}
     - -c ${{ inputs.config-path }}
