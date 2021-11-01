@@ -32,13 +32,6 @@ jobs:
           result-encoding: string
           script: return context.repo.repo.toLowerCase()
 
-      - name: Get repo full name
-        uses: actions/github-script@v5
-        id: repo_full_name
-        with:
-          result-encoding: string
-          script: return context.payload.repository.full_name.toLowerCase()
-
       - name: Fetch Gitleaks the latest release
         id: gitleaks_latest_release
         run: |
@@ -56,6 +49,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check - upgrade Docker image or not
+        id: upgrade
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_latest_release.outputs.upgrade == 'true')
+        run: |
+          echo "::set-output name=upgrade::true"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # - name: Format docker image full name
       #   uses: actions/github-script@v5
       #   id: docker_image_full_name
@@ -65,7 +66,7 @@ jobs:
 
       - name: Log in to ghcr.io
         uses: docker/login-action@v1
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_latest_release.outputs.upgrade == 'true')
+        if: steps.upgrade.outputs.upgrade == 'true'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -73,9 +74,9 @@ jobs:
 
       - name: Docker image metadata
         uses: docker/metadata-action@v3
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_latest_release.outputs.upgrade == 'true')
+        if: steps.upgrade.outputs.upgrade == 'true'
         with:
-          images: "ghcr.io/${{ steps.repo_full_name.outputs.result }}/gitleaks"
+          images: "ghcr.io/${{ steps.repo_owner.outputs.result }}/${{ steps.repo_name.outputs.result }}/gitleaks"
           flavor: latest=true
           tags: |
             type=raw,value=${{ github.run_id }}
@@ -84,7 +85,7 @@ jobs:
         id: docker_image_metadata
 
       - name: Build and push Docker image
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_latest_release.outputs.upgrade == 'true')
+        if: steps.upgrade.outputs.upgrade == 'true'
         uses: docker/build-push-action@v2
         with:
           tags: ${{ steps.docker_image_metadata.outputs.tags }}
