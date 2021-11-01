@@ -16,6 +16,14 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Fetch Gitleaks the latest release
+        id: gitleaks_latest_release
+        run: |
+          gitleaks_latest_tag=$(curl -sL https://api.github.com/repos/zricethezav/gitleaks/releases/latest | jq -c -r ".tag_name")
+          gitleaks_latest_version=$(echo ${gitleaks_latest_tag} | tr -d "v")
+          echo "::set-output name=tag::${gitleaks_latest_tag}"
+          echo "::set-output name=version::${gitleaks_latest_version}"
+
       - name: Format docker image full name
         uses: actions/github-script@v5
         id: docker_image_full_name
@@ -35,7 +43,10 @@ jobs:
         with:
           images: ${{ steps.docker_image_full_name.outputs.result }}
           flavor: latest=true
-          tags: type=raw,value=${{ github.run_id }}
+          tags: |
+            type=raw,value=${{ github.run_id }}
+            type=raw,value=${{ steps.gitleaks_latest_release.outputs.tag }}
+            type=raw,value=${{ steps.gitleaks_latest_release.outputs.version }}
         id: docker_image_metadata
 
       - name: Build and push Docker image
