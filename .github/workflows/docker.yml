@@ -40,7 +40,6 @@ jobs:
           echo "::set-output name=tag::${gitleaks_latest_tag}"
           echo "::set-output name=semver::${gitleaks_latest_semver}"
 
-          echo "::set-output name=upgrade::false"
           pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}%2Fgitleaks/versions --jq '[.[] | select(.metadata.container.tags | index("'${gitleaks_latest_tag}'"))] | length')
           echo "${pkgs}"
           if [ $pkgs = 0 ]
