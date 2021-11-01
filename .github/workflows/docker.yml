@@ -39,8 +39,14 @@ jobs:
           gitleaks_latest_semver=$(echo ${gitleaks_latest_tag} | tr -d "v")
           echo "::set-output name=tag::${gitleaks_latest_tag}"
           echo "::set-output name=semver::${gitleaks_latest_semver}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}/versions --jq '[.[] | select(.metadata.container.tags | index("'${gitleaks_latest_semver}'"))] | length')
+      - name: Check - upgrade Gitleaks or not
+        id: gitleaks_upgrade
+        if: github.event_name == 'schedule'
+        run: |
+          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}/versions --jq '[.[] | select(.metadata.container.tags | index("${{ steps.gitleaks_latest_release.outputs.semver }}"))] | length')
           if [ $pkgs = 0 ]
           then
             echo "::set-output name=upgrade::true"
@@ -50,11 +56,9 @@ jobs:
 
       - name: Check - upgrade Docker image or not
         id: upgrade
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_latest_release.outputs.upgrade == 'true')
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_upgrade.outputs.upgrade == 'true')
         run: |
           echo "::set-output name=upgrade::true"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to ghcr.io
         uses: docker/login-action@v1
