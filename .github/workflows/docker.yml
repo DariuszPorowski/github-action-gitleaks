@@ -14,7 +14,7 @@ jobs:
         id: docker_image_full_name
         with:
           result-encoding: string
-          script: return `ghcr.io/${github.repository.toLowerCase()}/gitleaks`
+          script: return 'ghcr.io/${{ github.repository }}/gitleaks'.toLowerCase()
 
       - name: Log in to ghcr.io
         uses: docker/login-action@v1
