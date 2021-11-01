@@ -8,17 +8,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Run Gitleaks
         id: gitleaks
         uses: DariuszPorowski/github-action-gitleaks@v1.0.0
         with:
           format: "sarif"
           fail: false
+
       - name: Get the output from the gitleaks step
         run: |
           echo "exitcode: ${{ steps.gitleaks.outputs.exitcode }}"
           echo "result: ${{ steps.gitleaks.outputs.result }}"
           echo "report: ${{ steps.gitleaks.outputs.report }}"
+
       - name: Upload SARIF report
         if: steps.gitleaks.outputs.exitcode == 1
         uses: github/codeql-action/upload-sarif@v1

@@ -2,7 +2,7 @@
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/DariuszPorowski/github-action-gitleaks)](https://github.com/DariuszPorowski/github-action-gitleaks/releases)
 
-This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethezav/gitleaks) in your CI/CD pipeline.
+This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethezav/gitleaks) in your CI/CD workflow.
 
 ## Inputs
 

@@ -126,7 +126,6 @@ then
     echo "::set-output name=report::gitleaks-report.${INPUT_FORMAT}"
     echo "----------------------------------"
     GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
-    echo -e "\e[31m🛑 ${GITLEAKS_RESULT}"
     if [ "${INPUT_FAIL}" = "true" ]
     then
         echo "::error::${GITLEAKS_RESULT}"
@@ -141,6 +140,5 @@ else
     echo "::set-output name=report::gitleaks-report.${INPUT_FORMAT}"
     echo "----------------------------------"
     GITLEAKS_RESULT="SUCCESS! Your code is good to go!"
-    echo -e "\e[32m✅ ${GITLEAKS_RESULT}"
     echo "::notice::${GITLEAKS_RESULT}"
 fi
