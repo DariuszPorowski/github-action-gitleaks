@@ -40,7 +40,7 @@ jobs:
           echo "::set-output name=tag::${gitleaks_latest_tag}"
           echo "::set-output name=semver::${gitleaks_latest_semver}"
 
-          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}%2Fgitleaks/versions --jq '[.[] | select(.metadata.container.tags | index("'${gitleaks_latest_semver}'"))] | length')
+          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}/versions --jq '[.[] | select(.metadata.container.tags | index("'${gitleaks_latest_semver}'"))] | length')
           if [ $pkgs = 0 ]
           then
             echo "::set-output name=upgrade::true"
@@ -68,7 +68,7 @@ jobs:
         uses: docker/metadata-action@v3
         if: steps.upgrade.outputs.upgrade == 'true'
         with:
-          images: "ghcr.io/${{ steps.repo_owner.outputs.result }}/${{ steps.repo_name.outputs.result }}/gitleaks"
+          images: "ghcr.io/${{ steps.repo_owner.outputs.result }}/${{ steps.repo_name.outputs.result }}"
           flavor: latest=true
           tags: |
             type=raw,value=${{ github.run_id }}
