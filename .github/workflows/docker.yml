@@ -8,31 +8,63 @@ on:
       - ".gitleaks/**"
       - "Dockerfile"
       - "entrypoint.sh"
-  repository_dispatch:
-    types: [gitleaks-release]
+  # repository_dispatch:
+  #   types: [gitleaks-release]
+  schedule:
+    - cron: "0 2 * * *"
   workflow_dispatch:
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Get repo owner
+        uses: actions/github-script@v5
+        id: repo_owner
+        with:
+          result-encoding: string
+          script: return context.repo.owner.toLowerCase()
+
+      - name: Get repo name
+        uses: actions/github-script@v5
+        id: repo_name
+        with:
+          result-encoding: string
+          script: return context.repo.repo.toLowerCase()
+
+      - name: Get repo full name
+        uses: actions/github-script@v5
+        id: repo_full_name
+        with:
+          result-encoding: string
+          script: return context.payload.repository.full_name.toLowerCase()
+
       - name: Fetch Gitleaks the latest release
         id: gitleaks_latest_release
         run: |
-          gitleaks_latest_tag=$(curl -sL https://api.github.com/repos/zricethezav/gitleaks/releases/latest | jq -c -r ".tag_name")
-          gitleaks_latest_version=$(echo ${gitleaks_latest_tag} | tr -d "v")
+          gitleaks_latest_tag=$(gh api repos/zricethezav/gitleaks/releases/latest --jq .tag_name)
+          gitleaks_latest_semver=$(echo ${gitleaks_latest_tag} | tr -d "v")
           echo "::set-output name=tag::${gitleaks_latest_tag}"
-          echo "::set-output name=version::${gitleaks_latest_version}"
+          echo "::set-output name=semver::${gitleaks_latest_semver}"
 
-      - name: Format docker image full name
-        uses: actions/github-script@v5
-        id: docker_image_full_name
-        with:
-          result-encoding: string
-          script: return 'ghcr.io/${{ github.repository }}/gitleaks'.toLowerCase()
+          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}%2Fgitleaks/versions --jq '[.[] | select(.metadata.container.tags | index("'${gitleaks_latest_tag}'"))] | length')
+          if [ $pkgs = 0]
+          then
+            echo "::set-output name=upgrade::true"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Format docker image full name
+      #   uses: actions/github-script@v5
+      #   id: docker_image_full_name
+      #   with:
+      #     result-encoding: string
+      #     script: return 'ghcr.io/${{ github.repository }}/gitleaks'.toLowerCase()
 
       - name: Log in to ghcr.io
         uses: docker/login-action@v1
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_latest_release.outputs.upgrade == 'true')
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -40,16 +72,18 @@ jobs:
 
       - name: Docker image metadata
         uses: docker/metadata-action@v3
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_latest_release.outputs.upgrade == 'true')
         with:
-          images: ${{ steps.docker_image_full_name.outputs.result }}
+          images: "ghcr.io/${{ steps.repo_full_name.outputs.result }}/gitleaks"
           flavor: latest=true
           tags: |
             type=raw,value=${{ github.run_id }}
             type=raw,value=${{ steps.gitleaks_latest_release.outputs.tag }}
-            type=raw,value=${{ steps.gitleaks_latest_release.outputs.version }}
+            type=raw,value=${{ steps.gitleaks_latest_release.outputs.semver }}
         id: docker_image_metadata
 
       - name: Build and push Docker image
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_latest_release.outputs.upgrade == 'true')
         uses: docker/build-push-action@v2
         with:
           tags: ${{ steps.docker_image_metadata.outputs.tags }}
