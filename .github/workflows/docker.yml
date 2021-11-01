@@ -1,0 +1,39 @@
+name: docker
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [gitleaks-release]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Format docker image full name
+        uses: actions/github-script@v5
+        id: docker_image_full_name
+        with:
+          result-encoding: string
+          script: return `ghcr.io/${github.repository.toLowerCase()}/gitleaks`
+
+      - name: Log in to ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker image metadata
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ steps.docker_image_full_name.outputs.result }}
+          flavor: latest=true
+          tags: type=raw,value=${{ github.run_id }}
+        id: docker_image_metadata
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          tags: ${{ steps.docker_image_metadata.outputs.tags }}
+          labels: ${{ steps.docker_image_metadata.outputs.labels }}
+          push: true
