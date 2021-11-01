@@ -11,7 +11,7 @@ on:
   # repository_dispatch:
   #   types: [gitleaks-release]
   schedule:
-    - cron: "* * * * *"
+    - cron: "* 2 * * *"
   workflow_dispatch:
 
 jobs:
@@ -40,8 +40,7 @@ jobs:
           echo "::set-output name=tag::${gitleaks_latest_tag}"
           echo "::set-output name=semver::${gitleaks_latest_semver}"
 
-          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}%2Fgitleaks/versions --jq '[.[] | select(.metadata.container.tags | index("'${gitleaks_latest_tag}'"))] | length')
-          echo "${pkgs}"
+          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}%2Fgitleaks/versions --jq '[.[] | select(.metadata.container.tags | index("'${gitleaks_latest_semver}'"))] | length')
           if [ $pkgs = 0 ]
           then
             echo "::set-output name=upgrade::true"
@@ -56,13 +55,6 @@ jobs:
           echo "::set-output name=upgrade::true"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Format docker image full name
-      #   uses: actions/github-script@v5
-      #   id: docker_image_full_name
-      #   with:
-      #     result-encoding: string
-      #     script: return 'ghcr.io/${{ github.repository }}/gitleaks'.toLowerCase()
 
       - name: Log in to ghcr.io
         uses: docker/login-action@v1
@@ -81,7 +73,7 @@ jobs:
           tags: |
             type=raw,value=${{ github.run_id }}
             type=raw,value=${{ steps.gitleaks_latest_release.outputs.tag }}
-            type=raw,value=${{ steps.gitleaks_latest_release.outputs.semver }}
+            type=semver,pattern={{version}},value=${{ steps.gitleaks_latest_release.outputs.semver }}
         id: docker_image_metadata
 
       - name: Build and push Docker image
