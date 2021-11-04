@@ -38,6 +38,8 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 >
 > Using a `fetch-depth` of '0' clones the entire history. If you want to do a more efficient clone, use '2', but that is not guaranteed to work with pull requests.
 
+### With SARIF report
+
 ```yaml
 - name: Checkout
   uses: actions/checkout@v2
@@ -60,7 +62,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
     echo "command: ${{ steps.gitleaks.outputs.command }}"
     echo "report: ${{ steps.gitleaks.outputs.report }}"
 
-- name: Upload SARIF report
+- name: Upload Gitleaks SARIF report to code scanning service
   if: steps.gitleaks.outputs.exitcode == 1
   uses: github/codeql-action/upload-sarif@v1
   with:
@@ -68,6 +70,27 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 ```
 
 > **NOTE:** SARIF file uploads for code scanning is not available for everyone. Read GitHub docs ([Uploading a SARIF file to GitHub](https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)) for more information.
+
+### With JSON report
+
+```yaml
+- name: Checkout
+  uses: actions/checkout@v2
+  with:
+    fetch-depth: "0"
+
+- name: Run Gitleaks
+  id: gitleaks
+  uses: DariuszPorowski/github-action-gitleaks@v1
+  id: gitleaks
+
+- name: Upload Gitleaks JSON report to artifacts
+  uses: actions/upload-artifact@v2
+  if: failure()
+  with:
+    name: gitleaks
+    path: ${{ steps.gitleaks.outputs.report }}
+```
 
 ## Additional rules
 
