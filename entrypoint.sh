@@ -74,7 +74,7 @@ command=$(arg "${command}" '--format=%s' "${INPUT_FORMAT}")
 command=$(arg "${command}" '--redact' "${INPUT_REDACT}")
 command=$(arg "${command}" '--verbose' "${INPUT_VERBOSE}")
 command=$(arg "${command}" '--debug' "${INPUT_DEBUG}")
-command=$(arg "${command}" '--report=%s' "gitleaks-report.${INPUT_FORMAT}")
+command=$(arg "${command}" '--report=%s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}")
 
 if [ "${#INPUT_NO_GIT}" = 0 ]
 then
@@ -84,14 +84,14 @@ fi
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]
 then
-    git --git-dir="${GITHUB_WORKSPACE}/.git" log --left-right --cherry-pick --pretty=format:"%H" remotes/origin/${GITHUB_BASE_REF}... > "commits.txt"
+    git --git-dir="${GITHUB_WORKSPACE}/.git" log --left-right --cherry-pick --pretty=format:"%H" remotes/origin/${GITHUB_BASE_REF}... > "${GITHUB_WORKSPACE}/commits.txt"
     if [ $? -eq 1 ]
     then
         echo "::error::git log fails"
         exit 1
     fi
     command=$(arg "${command}" '--path=%s' "${GITHUB_WORKSPACE}")
-    command=$(arg "${command}" '--commits-file=%s' "commits.txt")
+    command=$(arg "${command}" '--commits-file=%s' "${GITHUB_WORKSPACE}/commits.txt")
 else
     command=$(arg "${command}" '--path=%s' "${INPUT_PATH}")
     command=$(arg "${command}" '--no-git' "${INPUT_NO_GIT}")
@@ -106,13 +106,10 @@ COMMAND_OUTPUT=$(eval "${command}")
 if [ $? -eq 1 ]
 then
     echo "----------------------------------"
-    echo "::set-output name=exitcode::1"
-    echo "----------------------------------"
     echo "${COMMAND_OUTPUT}"
+    echo "::set-output name=exitcode::1"
     echo "::set-output name=output::${COMMAND_OUTPUT}"
-    echo "----------------------------------"
     echo "::set-output name=report::gitleaks-report.${INPUT_FORMAT}"
-    echo "----------------------------------"
     GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
     echo "::set-output name=result::${GITLEAKS_RESULT}"
     if [ "${INPUT_FAIL}" = "true" ]
@@ -124,11 +121,11 @@ then
     fi
 else
     echo "----------------------------------"
+    echo "${COMMAND_OUTPUT}"
     echo "::set-output name=exitcode::0"
-    echo "----------------------------------"
+    echo "::set-output name=output::${COMMAND_OUTPUT}"
     echo "::set-output name=report::gitleaks-report.${INPUT_FORMAT}"
-    echo "----------------------------------"
-    GITLEAKS_RESULT="SUCCESS! Your code is good to go!"
+    GITLEAKS_RESULT="SUCCESS! Your code is good to go"
     echo "::set-output name=result::${GITLEAKS_RESULT}"
     echo "::notice::${GITLEAKS_RESULT}"
 fi
