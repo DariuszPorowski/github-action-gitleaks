@@ -74,8 +74,7 @@ command=$(arg "${command}" '--format=%s' "${INPUT_FORMAT}")
 command=$(arg "${command}" '--redact' "${INPUT_REDACT}")
 command=$(arg "${command}" '--verbose' "${INPUT_VERBOSE}")
 command=$(arg "${command}" '--debug' "${INPUT_DEBUG}")
-command=$(arg "${command}" '--report=%s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_FORMAT}")
-command=$(arg "${command}" '--path=%s' "${INPUT_PATH}")
+command=$(arg "${command}" '--report=%s' "gitleaks-report.${INPUT_FORMAT}")
 
 if [ "${#INPUT_NO_GIT}" = 0 ]
 then
@@ -85,14 +84,16 @@ fi
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]
 then
-    git --git-dir="${GITHUB_WORKSPACE}/.git" log --left-right --cherry-pick --pretty=format:"%H" remotes/origin/${GITHUB_BASE_REF}... > "${GITHUB_WORKSPACE}/commits.txt"
+    git --git-dir="${GITHUB_WORKSPACE}/.git" log --left-right --cherry-pick --pretty=format:"%H" remotes/origin/${GITHUB_BASE_REF}... > "commits.txt"
     if [ $? -eq 1 ]
     then
         echo "::error::git log fails"
         exit 1
     fi
-    command=$(arg "${command}" '--commits-file=%s' "${GITHUB_WORKSPACE}/commits.txt")
+    command=$(arg "${command}" '--path=%s' "${GITHUB_WORKSPACE}")
+    command=$(arg "${command}" '--commits-file=%s' "commits.txt")
 else
+    command=$(arg "${command}" '--path=%s' "${INPUT_PATH}")
     command=$(arg "${command}" '--no-git' "${INPUT_NO_GIT}")
 fi
 
