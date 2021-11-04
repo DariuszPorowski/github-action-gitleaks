@@ -1,5 +1,5 @@
 name: Gitleaks Scanner
-description: Run Gitleaks in your CI/CD pipeline
+description: Run Gitleaks in your CI/CD workflow
 branding:
   color: purple
   icon: shield
@@ -17,7 +17,7 @@ inputs:
     default: "/.gitleaks/UDMSecretChecks.toml"
   format:
     description: "Report file format: json, csv, sarif (default: json)"
-    required: true
+    required: false
     default: "json"
   branch:
     description: "Branch to scan"
@@ -56,17 +56,4 @@ outputs:
 
 runs:
   using: "docker"
-  # image: "Dockerfile"
   image: "docker://ghcr.io/dariuszporowski/github-action-gitleaks:latest"
-  # args:
-  #   - -p ${{ inputs.path }}
-  #   - -c ${{ inputs.config-path }}
-  #   - -a ${{ inputs.additional-config }}
-  #   - -f ${{ inputs.format }}
-  #   - -b ${{ inputs.branch }}
-  #   - -n ${{ inputs.no-git }}
-  #   - -r ${{ inputs.redact }}
-  #   - -i ${{ inputs.depth }}
-  #   - -x ${{ inputs.fail }}
-  #   - -v ${{ inputs.verbose }}
-  #   - -d ${{ inputs.debug }}
