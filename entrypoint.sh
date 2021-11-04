@@ -84,7 +84,7 @@ fi
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]
 then
-    git --git-dir="${GITHUB_WORKSPACE}/.git" log --left-right --cherry-pick --pretty=format:"%H" remotes/origin/${GITHUB_BASE_REF}... > "${GITHUB_WORKSPACE}/commits.txt"
+    git log --git-dir="${GITHUB_WORKSPACE}/.git" --left-right --cherry-pick --pretty=format:"%H" remotes/origin/${GITHUB_BASE_REF} > "${GITHUB_WORKSPACE}/commits.txt"
     if [ $? -eq 1 ]
     then
         echo "::error::git log fails"
