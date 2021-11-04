@@ -8,4 +8,5 @@ LABEL "repository"="https://github.com/DariuszPorowski/github-action-gitleaks"
 
 COPY .gitleaks/* /.gitleaks/
 COPY entrypoint.sh /entrypoint.sh
+USER root
 ENTRYPOINT ["/entrypoint.sh"]
