@@ -73,7 +73,7 @@ function arg(){
 echo "----------------------------------"
 echo "INPUT PARAMETERS"
 echo "----------------------------------"
-echo "INPUT_PATH: ${INPUT_PATH}"
+echo "INPUT_PATH: ${GITHUB_WORKSPACE}/${INPUT_PATH}"
 echo "INPUT_CONFIG_PATH: ${INPUT_CONFIG_PATH}"
 echo "INPUT_ADDITIONAL_CONFIG: ${INPUT_ADDITIONAL_CONFIG}"
 echo "INPUT_FORMAT: ${INPUT_FORMAT}"
@@ -104,6 +104,7 @@ command=$(arg "${command}" '--redact' "${INPUT_REDACT}")
 command=$(arg "${command}" '--verbose' "${INPUT_VERBOSE}")
 command=$(arg "${command}" '--debug' "${INPUT_DEBUG}")
 command=$(arg "${command}" '--report=%s' "gitleaks-report.${INPUT_FORMAT}")
+command=$(arg "${command}" '--path=%s' "${GITHUB_WORKSPACE}/${INPUT_PATH}")
 
 if [ "${#INPUT_NO_GIT}" = 0 ]
 then
@@ -121,7 +122,6 @@ then
     fi
     command=$(arg "${command}" '--commits-file=%s' "commits.txt")
 else
-    command=$(arg "${command}" '--path=%s' "${INPUT_PATH}")
     command=$(arg "${command}" '--no-git' "${INPUT_NO_GIT}")
 fi
 
