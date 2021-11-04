@@ -34,9 +34,15 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 ## Example usage
 
+> **NOTE:** You must use actions/checkout before the `github-action-gitleaks` step. If you are using `actions/checkout@v2` you must specify a commit depth other than the default which is 1.
+>
+> Using a `fetch-depth` of '0' clones the entire history. If you want to do a more efficient clone, use '2', but that is not guaranteed to work with pull requests.
+
 ```yaml
 - name: Checkout
   uses: actions/checkout@v2
+  with:
+    fetch-depth: "0"
 
 - name: Run Gitleaks
   id: gitleaks
@@ -61,8 +67,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
     sarif_file: ${{ steps.gitleaks.outputs.report }}
 ```
 
-> NOTE: SARIF file uploads for code scanning is not available for everyone. Read GitHub docs ([Uploading a SARIF file to GitHub
-](https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)) for more information.
+> **NOTE:** SARIF file uploads for code scanning is not available for everyone. Read GitHub docs ([Uploading a SARIF file to GitHub](https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)) for more information.
 
 ## Additional rules
 
