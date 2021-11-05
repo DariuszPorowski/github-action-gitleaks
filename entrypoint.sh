@@ -20,7 +20,7 @@ function default(){
     local _val="${3}"
     local _defaultifnotset="${4}"
 
-    if [[ "${_defaultifnotset}" == 'true' ]]
+    if [[ "${_defaultifnotset}" == "true" ]]
     then
         if [ "${#_val}" = 0 ]
         then
@@ -115,7 +115,7 @@ then
     echo "::set-output name=report::gitleaks-report.${INPUT_FORMAT}"
     GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
     echo "::set-output name=result::${GITLEAKS_RESULT}"
-    if [ "${INPUT_FAIL}" = 'true' ]
+    if [ "${INPUT_FAIL}" = "true" ]
     then
         echo "::error::${GITLEAKS_RESULT}"
         exit 1
