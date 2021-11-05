@@ -40,14 +40,17 @@ title = "gitleaks config"
     description = "Github Personal Access Token"
     regex = '''ghp_[0-9a-zA-Z]{36}'''
     tags = ["key", "Github"]
+
 [[rules]]
     description = "Github OAuth Access Token"
     regex = '''gho_[0-9a-zA-Z]{36}'''
     tags = ["key", "Github"]
+
 [[rules]]
     description = "Github App Token"
     regex = '''(ghu|ghs)_[0-9a-zA-Z]{36}'''
     tags = ["key", "Github"]
+
 [[rules]]
     description = "Github Refresh Token"
     regex = '''ghr_[0-9a-zA-Z]{76}'''

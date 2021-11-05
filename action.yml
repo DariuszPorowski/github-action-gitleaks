@@ -5,14 +5,14 @@ branding:
   icon: shield
 inputs:
   path:
-    description: "Path to scan (relative to $GITHUB_WORKSPACE)"
+    description: "Path to scan (relative to $GITHUB_WORKSPACE) (default: $GITHUB_WORKSPACE)"
     required: false
   config_path:
-    description: "Path to config (relative to $GITHUB_WORKSPACE)"
+    description: "Path to config (relative to $GITHUB_WORKSPACE) (default: /.gitleaks/gitleaks.toml)"
     required: false
     default: "/.gitleaks/gitleaks.toml"
   additional_config:
-    description: "Path to an additional Gitleaks config to append with an existing config (relative to $GITHUB_WORKSPACE)"
+    description: "Path to an additional config to append with an existing config (relative to $GITHUB_WORKSPACE) (default: /.gitleaks/UDMSecretChecks.toml)"
     required: false
     default: "/.gitleaks/UDMSecretChecks.toml"
   format:
@@ -26,18 +26,20 @@ inputs:
     description: "Treat git repos as plain directories and scan those file"
     required: false
   redact:
-    description: "Redact secrets from log messages and leaks"
+    description: "Redact secrets from log messages and leaks (default: true)"
     required: false
+    default: "true"
   depth:
     description: "Number of commits to scan"
     required: false
   fail:
-    description: "Fail if secrets founded"
+    description: "Fail if secrets founded (default: true)"
     required: false
     default: "true"
   verbose:
-    description: "Show verbose output from scan"
+    description: "Show verbose output from scan (default: true)"
     required: false
+    default: "true"
   debug:
     description: "Log debug messages"
     required: false

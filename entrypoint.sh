@@ -5,7 +5,7 @@ function arg(){
     local _format="${2}"
     local _val="${3}"
     
-    if [ "${#_val}" = 0 ]
+    if [[ "${#_val}" == 0 || "${_val}" == "false" ]]
     then
         echo "${_command}"
         return
@@ -37,13 +37,16 @@ function default(){
     fi
 }
 
-INPUT_PATH=$(default "${GITHUB_WORKSPACE}" "${GITHUB_WORKSPACE}/${INPUT_PATH}" "${INPUT_PATH}" "true")
-INPUT_CONFIG_PATH=$(default "/.gitleaks/gitleaks.toml" "${GITHUB_WORKSPACE}/${INPUT_CONFIG_PATH}" "${INPUT_CONFIG_PATH}" "true")
+INPUT_PATH=$(default "${GITHUB_WORKSPACE}" "${GITHUB_WORKSPACE}/${INPUT_PATH}" "${INPUT_PATH}" 'true')
+INPUT_CONFIG_PATH=$(default "/.gitleaks/gitleaks.toml" "${GITHUB_WORKSPACE}/${INPUT_CONFIG_PATH}" "${INPUT_CONFIG_PATH}" 'true')
 if [[ "${INPUT_ADDITIONAL_CONFIG}" != "false" ]]
 then
-    INPUT_ADDITIONAL_CONFIG=$(default "/.gitleaks/UDMSecretChecks.toml" "${GITHUB_WORKSPACE}/${INPUT_ADDITIONAL_CONFIG}" "${INPUT_ADDITIONAL_CONFIG}" "true")
+    INPUT_ADDITIONAL_CONFIG=$(default "/.gitleaks/UDMSecretChecks.toml" "${GITHUB_WORKSPACE}/${INPUT_ADDITIONAL_CONFIG}" "${INPUT_ADDITIONAL_CONFIG}" 'true')
 fi
-INPUT_FORMAT=$(default 'json' "${INPUT_FORMAT}" "${INPUT_FORMAT}" "true")
+INPUT_FORMAT=$(default 'json' "${INPUT_FORMAT}" "${INPUT_FORMAT}" 'true')
+INPUT_REDACT=$(default 'true' 'false' "${INPUT_REDACT}" 'true')
+INPUT_FAIL=$(default 'true' 'false' "${INPUT_FAIL}" 'true')
+INPUT_VERBOSE=$(default 'true' 'false' "${INPUT_VERBOSE}" 'true')
 
 echo "----------------------------------"
 echo "INPUT PARAMETERS"
