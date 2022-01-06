@@ -82,7 +82,6 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 - name: Run Gitleaks
   id: gitleaks
   uses: DariuszPorowski/github-action-gitleaks@v1
-  id: gitleaks
 
 - name: Upload Gitleaks JSON report to artifacts
   uses: actions/upload-artifact@v2
