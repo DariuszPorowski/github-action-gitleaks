@@ -43,6 +43,7 @@ INPUT_REPORT_FORMAT=$(default 'json' "${INPUT_REPORT_FORMAT}" "${INPUT_REPORT_FO
 INPUT_REDACT=$(default 'true' 'false' "${INPUT_REDACT}" 'true')
 INPUT_FAIL=$(default 'true' 'false' "${INPUT_FAIL}" 'true')
 INPUT_VERBOSE=$(default 'true' 'false' "${INPUT_VERBOSE}" 'true')
+INPUT_LOG_LEVEL=$(default 'info' "${INPUT_LOG_LEVEL}" "${INPUT_LOG_LEVEL}" 'true')
 
 echo "----------------------------------"
 echo "INPUT PARAMETERS"
@@ -54,6 +55,7 @@ echo "INPUT_NO_GIT: ${INPUT_NO_GIT}"
 echo "INPUT_REDACT: ${INPUT_REDACT}"
 echo "INPUT_FAIL: ${INPUT_FAIL}"
 echo "INPUT_VERBOSE: ${INPUT_VERBOSE}"
+echo "INPUT_LOG_LEVEL: ${INPUT_LOG_LEVEL}"
 echo "----------------------------------"
 
 command="gitleaks detect"
@@ -65,6 +67,7 @@ fi
 command=$(arg "${command}" '--report-format %s' "${INPUT_REPORT_FORMAT}")
 command=$(arg "${command}" '--redact' "${INPUT_REDACT}")
 command=$(arg "${command}" '--verbose' "${INPUT_VERBOSE}")
+command=$(arg "${command}" '--log-level %s' "${INPUT_LOG_LEVEL}")
 command=$(arg "${command}" '--report-path %s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_REPORT_FORMAT}")
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]

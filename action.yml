@@ -30,6 +30,10 @@ inputs:
     description: "Show verbose output from scan (default: true)"
     required: false
     default: "true"
+  log_level:
+    description: "Log level (debug, info, warn, error, fatal) (default: info)"
+    required: false
+    default: "info"
 
 outputs:
   exitcode: # id of output
