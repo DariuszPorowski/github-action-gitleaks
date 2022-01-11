@@ -1,8 +1,10 @@
 # GitHub Action for Gitleaks
 
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/DariuszPorowski/github-action-gitleaks)](https://github.com/DariuszPorowski/github-action-gitleaks/releases)
+
 This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethezav/gitleaks) in your CI/CD workflow.
 
-> NOTE: v1 of this GitHub Action supports only the latest version of Gitleaks from v7 release (v7.6.1).
+> NOTE: v2 of this GitHub Action supports only the latest version of Gitleaks from v8 release.
 
 ## Inputs
 
@@ -48,10 +50,10 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 - name: Run Gitleaks
   id: gitleaks
-  uses: DariuszPorowski/github-action-gitleaks@v1
+  uses: DariuszPorowski/github-action-gitleaks@v2
   with:
-    config_path: ".gitleaks/myconfig.toml"
-    format: "sarif"
+    config: ".gitleaks/GitleaksUdmCombo.toml"
+    report_format: "sarif"
     fail: false
 
 - name: Get the output from the gitleaks step
@@ -81,7 +83,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 - name: Run Gitleaks
   id: gitleaks
-  uses: DariuszPorowski/github-action-gitleaks@v1
+  uses: DariuszPorowski/github-action-gitleaks@v2
 
 - name: Upload Gitleaks JSON report to artifacts
   uses: actions/upload-artifact@v2
@@ -95,7 +97,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 [Jesse Houwing](https://github.com/jessehouwing) provided a Gitleaks config with most of Microsoft's deprecated CredScan rules. Consider using it if you need to scan projects based on Microsoft technologies or Azure Cloud.
 
-- [UDMSecretChecks.toml](https://github.com/jessehouwing/gitleaks-azure/blob/main/UDMSecretChecks.toml)
+- [UDMSecretChecks.toml](https://github.com/jessehouwing/gitleaks-azure/blob/main/UDMSecretChecksv8.toml)
 
 ## Contributions
 
