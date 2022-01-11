@@ -1,24 +1,23 @@
 # GitHub Action for Gitleaks
 
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/DariuszPorowski/github-action-gitleaks)](https://github.com/DariuszPorowski/github-action-gitleaks/releases)
+
 This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethezav/gitleaks) in your CI/CD workflow.
 
-> NOTE: v1 of this GitHub Action supports only the latest version of Gitleaks from v7 release (v7.6.1).
+> NOTE: v2 of this GitHub Action supports only the latest version of Gitleaks from v8 release.
 
 ## Inputs
 
-| Name              | Required | Type   | Default value                   | Description                                                                                                                                                    |
-| ----------------- | -------- | ------ | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| path              | false    | string | $GITHUB_WORKSPACE               | Path to scan (relative to $GITHUB_WORKSPACE)                                                                                                                   |
-| config_path       | false    | string | /.gitleaks/gitleaks.toml        | Path to config (relative to $GITHUB_WORKSPACE)                                                                                                                 |
-| additional_config | false    | string | /.gitleaks/UDMSecretChecks.toml | Path to an additional gitleaks config to append with an existing config (relative to $GITHUB_WORKSPACE). Set to "false" if additional_config does not required |
-| format            | false    | string | json                            | Report file format: json, csv, sarif                                                                                                                           |
-| branch            | false    | string |                                 | Branch to scan                                                                                                                                                 |
-| no_git            | false    | bool   |                                 | Treat git repos as plain directories and scan those file                                                                                                       |
-| redact            | false    | bool   | true                            | Redact secrets from log messages and leaks                                                                                                                     |
-| depth             | false    | int    |                                 | Number of commits to scan                                                                                                                                      |
-| fail              | false    | bool   | true                            | Fail if secrets founded                                                                                                                                        |
-| verbose           | false    | bool   | true                            | Show verbose output from scan                                                                                                                                  |
-| debug             | false    | bool   |                                 | Log debug messages                                                                                                                                             |
+| Name          | Required | Type   | Default value                    | Description                                              |
+| ------------- | -------- | ------ | -------------------------------- | -------------------------------------------------------- |
+| source        | false    | string | $GITHUB_WORKSPACE                | Path to source (relative to $GITHUB_WORKSPACE)           |
+| config        | false    | string | /.gitleaks/GitleaksUdmCombo.toml | Config file path (relative to $GITHUB_WORKSPACE)         |
+| report_format | false    | string | json                             | Report file format: json, csv, sarif                     |
+| no_git        | false    | bool   |                                  | Treat git repos as plain directories and scan those file |
+| redact        | false    | bool   | true                             | Redact secrets from log messages and leaks               |
+| fail          | false    | bool   | true                             | Fail if secrets founded                                  |
+| verbose       | false    | bool   | true                             | Show verbose output from scan                            |
+| log_level     | false    | string | info                             | Log level (debug, info, warn, error, fatal)              |
 
 > NOTE: The solution provides predefined configuration (See: [.gitleaks](https://github.com/DariuszPorowski/github-action-gitleaks/tree/main/.gitleaks) path). You can override it by yours config using relative to `$GITHUB_WORKSPACE`.
 
@@ -48,10 +47,10 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 - name: Run Gitleaks
   id: gitleaks
-  uses: DariuszPorowski/github-action-gitleaks@v1
+  uses: DariuszPorowski/github-action-gitleaks@v2
   with:
-    config_path: ".gitleaks/myconfig.toml"
-    format: "sarif"
+    config: ".gitleaks/GitleaksUdmCombo.toml"
+    report_format: "sarif"
     fail: false
 
 - name: Get the output from the gitleaks step
@@ -81,7 +80,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 - name: Run Gitleaks
   id: gitleaks
-  uses: DariuszPorowski/github-action-gitleaks@v1
+  uses: DariuszPorowski/github-action-gitleaks@v2
 
 - name: Upload Gitleaks JSON report to artifacts
   uses: actions/upload-artifact@v2
@@ -95,7 +94,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 [Jesse Houwing](https://github.com/jessehouwing) provided a Gitleaks config with most of Microsoft's deprecated CredScan rules. Consider using it if you need to scan projects based on Microsoft technologies or Azure Cloud.
 
-- [UDMSecretChecks.toml](https://github.com/jessehouwing/gitleaks-azure/blob/main/UDMSecretChecks.toml)
+- [UDMSecretChecks.toml](https://github.com/jessehouwing/gitleaks-azure/blob/main/UDMSecretChecksv8.toml)
 
 ## Contributions
 
