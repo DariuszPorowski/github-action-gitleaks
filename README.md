@@ -1,8 +1,8 @@
 # GitHub Action for Gitleaks
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/DariuszPorowski/github-action-gitleaks)](https://github.com/DariuszPorowski/github-action-gitleaks/releases)
-
 This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethezav/gitleaks) in your CI/CD workflow.
+
+> NOTE: v1 of this GitHub Action supports only the latest version of Gitleaks from v7 release (v7.6.1).
 
 ## Inputs
 
