@@ -15,7 +15,7 @@ jobs:
         id: gitleaks
         uses: DariuszPorowski/github-action-gitleaks@v2
         with:
-          format: "sarif"
+          report_format: "sarif"
           fail: false
 
       - name: Get the output from the gitleaks step
