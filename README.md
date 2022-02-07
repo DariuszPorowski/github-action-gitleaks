@@ -49,7 +49,6 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
   id: gitleaks
   uses: DariuszPorowski/github-action-gitleaks@v2
   with:
-    config: ".gitleaks/GitleaksUdmCombo.toml"
     report_format: "sarif"
     fail: false
 
@@ -70,7 +69,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 > **NOTE:** SARIF file uploads for code scanning is not available for everyone. Read GitHub docs ([Uploading a SARIF file to GitHub](https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github)) for more information.
 
-### With JSON report
+### With JSON report and custom rules config
 
 ```yaml
 - name: Checkout
@@ -81,6 +80,8 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 - name: Run Gitleaks
   id: gitleaks
   uses: DariuszPorowski/github-action-gitleaks@v2
+  with:
+    config: "MyGitleaksConfigs/MyGitleaksConfig.toml"
 
 - name: Upload Gitleaks JSON report to artifacts
   uses: actions/upload-artifact@v2
