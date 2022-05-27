@@ -54,6 +54,10 @@ echo "INPUT_VERBOSE: ${INPUT_VERBOSE}"
 echo "INPUT_LOG_LEVEL: ${INPUT_LOG_LEVEL}"
 echo "----------------------------------"
 
+echo "git config --global --add safe.directory ${INPUT_SOURCE}"
+git config --global --add safe.directory ${INPUT_SOURCE}
+echo "----------------------------------"
+
 command="gitleaks detect"
 if [ -f "${INPUT_CONFIG}" ]; then
     command=$(arg "${command}" '--config %s' "${INPUT_CONFIG}")
