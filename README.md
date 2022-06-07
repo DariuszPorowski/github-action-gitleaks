@@ -1,3 +1,5 @@
+test
+
 # GitHub Action for Gitleaks
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/DariuszPorowski/github-action-gitleaks)](https://github.com/DariuszPorowski/github-action-gitleaks/releases)
