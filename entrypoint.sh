@@ -71,7 +71,8 @@ command=$(arg "${command}" '--report-path %s' "${GITHUB_WORKSPACE}/gitleaks-repo
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
     command=$(arg "${command}" '--source %s' "${GITHUB_WORKSPACE}")
-    command=$(arg "${command}" '--log-opts "%s"' "--all ${GITHUB_HEAD_REF}...${GITHUB_BASE_REF}")
+    # command=$(arg "${command}" '--log-opts "%s"' "${GITHUB_HEAD_REF}^..${GITHUB_BASE_REF}")
+    command=$(arg "${command}" '--log-opts "%s"' "${GITHUB_BASE_REF}^..${GITHUB_HEAD_REF}")
 else
     command=$(arg "${command}" '--source %s' "${INPUT_SOURCE}")
     command=$(arg "${command}" '--no-git' "${INPUT_NO_GIT}")
