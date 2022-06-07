@@ -41,7 +41,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 ```yaml
 - name: Checkout
-  uses: actions/checkout@v2
+  uses: actions/checkout@v3
   with:
     fetch-depth: "0"
 
@@ -62,7 +62,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 - name: Upload Gitleaks SARIF report to code scanning service
   if: steps.gitleaks.outputs.exitcode == 1
-  uses: github/codeql-action/upload-sarif@v1
+  uses: github/codeql-action/upload-sarif@v2
   with:
     sarif_file: ${{ steps.gitleaks.outputs.report }}
 ```
@@ -73,7 +73,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 ```yaml
 - name: Checkout
-  uses: actions/checkout@v2
+  uses: actions/checkout@v3
   with:
     fetch-depth: "0"
 
@@ -84,7 +84,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
     config: "MyGitleaksConfigs/MyGitleaksConfig.toml"
 
 - name: Upload Gitleaks JSON report to artifacts
-  uses: actions/upload-artifact@v2
+  uses: actions/upload-artifact@v3
   if: failure()
   with:
     name: gitleaks
@@ -103,7 +103,9 @@ Any feedback on `Gitleaks`, please reach out to [Zachary Rice](https://github.co
 
 Any feedback on the gitleaks config for Azure `UDMSecretChecks.toml` file is welcome. Follow Jesse Houwing's github repo - [gitleaks-azure](https://github.com/jessehouwing/gitleaks-azure).
 
-Any feedback or contribution to this project is welcome.
+Thanks to [C.J. May (@lawndoc)](https://github.com/lawndoc) for contributing 🤘
+
+Any feedback or contribution to this project is welcome!
 
 ## How do I remove a secret from git's history?
 
