@@ -54,8 +54,9 @@ echo "INPUT_VERBOSE: ${INPUT_VERBOSE}"
 echo "INPUT_LOG_LEVEL: ${INPUT_LOG_LEVEL}"
 echo "----------------------------------"
 
+echo "Setting Git safe directory (CVE-2022-24765)"
 echo "git config --global --add safe.directory ${INPUT_SOURCE}"
-git config --global --add safe.directory ${INPUT_SOURCE}
+git config --global --add safe.directory "${INPUT_SOURCE}"
 echo "----------------------------------"
 
 command="gitleaks detect"
@@ -74,7 +75,6 @@ if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
 
     base_sha=$(git rev-parse "refs/remotes/origin/${GITHUB_BASE_REF}")
     head_sha=$(git rev-parse "refs/remotes/pull/${GITHUB_REF_NAME}")
-
     command=$(arg "${command}" '--log-opts "%s"' "${base_sha}^..${head_sha}")
 else
     command=$(arg "${command}" '--source %s' "${INPUT_SOURCE}")
@@ -111,3 +111,5 @@ else
     echo "::set-output name=result::${GITLEAKS_RESULT}"
     echo "::notice::${GITLEAKS_RESULT}"
 fi
+
+echo "Gitleaks summary: ${GITLEAKS_RESULT}" >>$GITHUB_STEP_SUMMARY
