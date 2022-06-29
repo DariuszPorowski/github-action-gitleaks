@@ -1,16 +1,14 @@
 #!/bin/bash
 
 function arg() {
-    local _command="${1}"
-    local _format="${2}"
-    local _val="${3}"
+    local _format="${1}"
+    local _val="${2}"
 
     if [[ "${#_val}" == 0 || "${_val}" == "false" ]]; then
-        echo "${_command}"
         return
     fi
-    _arg=$(printf " ${_format}" "${_val}")
-    echo "${_command}${_arg}"
+
+    printf " ${_format}" "${_val}"
 }
 
 function default() {
@@ -61,24 +59,24 @@ echo "----------------------------------"
 
 command="gitleaks detect"
 if [ -f "${INPUT_CONFIG}" ]; then
-    command=$(arg "${command}" '--config %s' "${INPUT_CONFIG}")
+    command+=$(arg '--config %s' "${INPUT_CONFIG}")
 fi
 
-command=$(arg "${command}" '--report-format %s' "${INPUT_REPORT_FORMAT}")
-command=$(arg "${command}" '--redact' "${INPUT_REDACT}")
-command=$(arg "${command}" '--verbose' "${INPUT_VERBOSE}")
-command=$(arg "${command}" '--log-level %s' "${INPUT_LOG_LEVEL}")
-command=$(arg "${command}" '--report-path %s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_REPORT_FORMAT}")
+command+=$(arg '--report-format %s' "${INPUT_REPORT_FORMAT}")
+command+=$(arg '--redact' "${INPUT_REDACT}")
+command+=$(arg '--verbose' "${INPUT_VERBOSE}")
+command+=$(arg '--log-level %s' "${INPUT_LOG_LEVEL}")
+command+=$(arg '--report-path %s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_REPORT_FORMAT}")
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-    command=$(arg "${command}" '--source %s' "${GITHUB_WORKSPACE}")
+    command+=$(arg '--source %s' "${GITHUB_WORKSPACE}")
 
     base_sha=$(git rev-parse "refs/remotes/origin/${GITHUB_BASE_REF}")
     head_sha=$(git rev-parse "refs/remotes/pull/${GITHUB_REF_NAME}")
-    command=$(arg "${command}" '--log-opts "%s"' "${base_sha}^..${head_sha}")
+    command+=$(arg '--log-opts "%s"' "${base_sha}^..${head_sha}")
 else
-    command=$(arg "${command}" '--source %s' "${INPUT_SOURCE}")
-    command=$(arg "${command}" '--no-git' "${INPUT_NO_GIT}")
+    command+=$(arg '--source %s' "${INPUT_SOURCE}")
+    command+=$(arg '--no-git' "${INPUT_NO_GIT}")
 fi
 
 echo "Running gitleaks $(gitleaks version)"
@@ -112,4 +110,4 @@ else
     echo "::notice::${GITLEAKS_RESULT}"
 fi
 
-echo "Gitleaks summary: ${GITLEAKS_RESULT}" >>$GITHUB_STEP_SUMMARY
+echo "Gitleaks Summary: ${GITLEAKS_RESULT}" >>$GITHUB_STEP_SUMMARY
