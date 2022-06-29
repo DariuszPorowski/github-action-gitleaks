@@ -83,13 +83,13 @@ echo "Running gitleaks $(gitleaks version)"
 echo "----------------------------------"
 echo "${command}"
 echo "::set-output name=command::${command}"
-COMMAND_OUTPUT=$(eval "${command}")
+OUTPUT=$(eval "${command}")
 
 if [ $? -eq 1 ]; then
     echo "----------------------------------"
-    echo "${COMMAND_OUTPUT}"
+    echo "${OUTPUT}"
     echo "::set-output name=exitcode::1"
-    echo "::set-output name=output::${COMMAND_OUTPUT}"
+    echo "::set-output name=output::${OUTPUT}"
     echo "::set-output name=report::gitleaks-report.${INPUT_REPORT_FORMAT}"
     GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
     echo "::set-output name=result::${GITLEAKS_RESULT}"
@@ -101,9 +101,9 @@ if [ $? -eq 1 ]; then
     fi
 else
     echo "----------------------------------"
-    echo "${COMMAND_OUTPUT}"
+    echo "${OUTPUT}"
     echo "::set-output name=exitcode::0"
-    echo "::set-output name=output::${COMMAND_OUTPUT}"
+    echo "::set-output name=output::${OUTPUT}"
     echo "::set-output name=report::gitleaks-report.${INPUT_REPORT_FORMAT}"
     GITLEAKS_RESULT="SUCCESS! Your code is good to go"
     echo "::set-output name=result::${GITLEAKS_RESULT}"
