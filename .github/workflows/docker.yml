@@ -64,10 +64,10 @@ jobs:
         if: steps.upgrade.outputs.upgrade == 'true'
         uses: actions/checkout@v3
 
-      - name: Update config to the latest
+      - name: Update config to the release version
         if: steps.upgrade.outputs.upgrade == 'true'
         run: |
-          curl --output "${GITHUB_WORKSPACE}/.gitleaks/gitleaks.toml" https://raw.githubusercontent.com/zricethezav/gitleaks/master/config/gitleaks.toml
+          curl --output "${GITHUB_WORKSPACE}/.gitleaks/gitleaks.toml" https://raw.githubusercontent.com/zricethezav/gitleaks/${{ steps.gitleaks_latest_release.outputs.tag }}/config/gitleaks.toml
 
       - name: Login to ghcr.io
         uses: docker/login-action@v2
