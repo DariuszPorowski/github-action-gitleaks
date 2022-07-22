@@ -1,4 +1,4 @@
-FROM zricethezav/gitleaks:latest
+FROM ghcr.io/zricethezav/gitleaks:latest
 
 LABEL "com.github.actions.name"="Gitleaks Scanner"
 LABEL "com.github.actions.description"="Runs Gitleaks in your CI/CD workflow"
