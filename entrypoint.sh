@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +e
+
 function arg() {
     local _format="${1}"
     local _val="${2}"
@@ -32,7 +34,7 @@ function default() {
 }
 
 INPUT_SOURCE=$(default "${GITHUB_WORKSPACE}" "${GITHUB_WORKSPACE}/${INPUT_SOURCE}" "${INPUT_SOURCE}" 'true')
-INPUT_CONFIG=$(default "/.gitleaks/GitleaksUdmCombo.toml" "${GITHUB_WORKSPACE}/${INPUT_CONFIG}" "${INPUT_CONFIG}" 'true')
+INPUT_CONFIG=$(default "/.gitleaks/UDMSecretChecks.toml" "${GITHUB_WORKSPACE}/${INPUT_CONFIG}" "${INPUT_CONFIG}" 'true')
 INPUT_REPORT_FORMAT=$(default 'json' "${INPUT_REPORT_FORMAT}" "${INPUT_REPORT_FORMAT}" 'true')
 INPUT_REDACT=$(default 'true' 'false' "${INPUT_REDACT}" 'true')
 INPUT_FAIL=$(default 'true' 'false' "${INPUT_FAIL}" 'true')
@@ -73,7 +75,7 @@ if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
 
     base_sha=$(git rev-parse "refs/remotes/origin/${GITHUB_BASE_REF}")
     head_sha=$(git rev-parse "refs/remotes/pull/${GITHUB_REF_NAME}")
-    command+=$(arg '--log-opts "%s"' "${base_sha}^..${head_sha}")
+    command+=$(arg '--log-opts "%s"' "--no-merges --first-parent ${base_sha}^..${head_sha}")
 else
     command+=$(arg '--source %s' "${INPUT_SOURCE}")
     command+=$(arg '--no-git' "${INPUT_NO_GIT}")
@@ -82,32 +84,39 @@ fi
 echo "Running gitleaks $(gitleaks version)"
 echo "----------------------------------"
 echo "${command}"
-echo "::set-output name=command::${command}"
-OUTPUT=$(eval "${command}")
 
-if [ $? -eq 1 ]; then
-    echo "----------------------------------"
-    echo "${OUTPUT}"
-    echo "::set-output name=exitcode::1"
-    echo "::set-output name=output::${OUTPUT}"
-    echo "::set-output name=report::gitleaks-report.${INPUT_REPORT_FORMAT}"
-    GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
-    echo "::set-output name=result::${GITLEAKS_RESULT}"
-    if [ "${INPUT_FAIL}" = "true" ]; then
-        echo "::error::${GITLEAKS_RESULT}"
-        exit 1
-    else
-        echo "::warning::${GITLEAKS_RESULT}"
-    fi
-else
-    echo "----------------------------------"
-    echo "${OUTPUT}"
-    echo "::set-output name=exitcode::0"
-    echo "::set-output name=output::${OUTPUT}"
-    echo "::set-output name=report::gitleaks-report.${INPUT_REPORT_FORMAT}"
+OUTPUT=$(eval "${command}")
+exitcode=$?
+
+if [ ${exitcode} -eq 0 ]; then
     GITLEAKS_RESULT="SUCCESS! Your code is good to go"
-    echo "::set-output name=result::${GITLEAKS_RESULT}"
-    echo "::notice::${GITLEAKS_RESULT}"
+elif [ ${exitcode} -eq 1 ]; then
+    GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
+else
+    GITLEAKS_RESULT="Gitleaks unknown error"
 fi
 
+echo "----------------------------------"
+echo "${OUTPUT}"
+echo "::set-output name=output::${OUTPUT}"
+echo "::set-output name=report::gitleaks-report.${INPUT_REPORT_FORMAT}"
+echo "::set-output name=result::${GITLEAKS_RESULT}"
+echo "::set-output name=command::${command}"
+echo "::set-output name=exitcode::${exitcode}"
+
 echo "Gitleaks Summary: ${GITLEAKS_RESULT}" >>$GITHUB_STEP_SUMMARY
+echo "${OUTPUT}" >>$GITHUB_STEP_SUMMARY
+
+if [ ${exitcode} -eq 0 ]; then
+    echo "::notice::${GITLEAKS_RESULT}"
+elif [ ${exitcode} -eq 1 ]; then
+    if [ "${INPUT_FAIL}" = "true" ]; then
+        echo "::error::${GITLEAKS_RESULT}"
+    else
+        echo "::warning::${GITLEAKS_RESULT}"
+        exit 0
+    fi
+else
+    echo "::error::${GITLEAKS_RESULT}"
+fi
+exit ${exitcode}
