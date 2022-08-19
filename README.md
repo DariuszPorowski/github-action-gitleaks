@@ -11,9 +11,9 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 | Name          | Required | Type   | Default value                    | Description                                              |
 | ------------- | -------- | ------ | -------------------------------- | -------------------------------------------------------- |
 | source        | false    | string | $GITHUB_WORKSPACE                | Path to source (relative to $GITHUB_WORKSPACE)           |
-| config        | false    | string | /.gitleaks/GitleaksUdmCombo.toml | Config file path (relative to $GITHUB_WORKSPACE)         |
+| config        | false    | string | /.gitleaks/UDMSecretChecks.toml  | Config file path (relative to $GITHUB_WORKSPACE)         |
 | report_format | false    | string | json                             | Report file format: json, csv, sarif                     |
-| no_git        | false    | bool   |                                  | Treat git repos as plain directories and scan those file |
+| no_git        | false    | bool   | false                            | Treat git repos as plain directories and scan those file |
 | redact        | false    | bool   | true                             | Redact secrets from log messages and leaks               |
 | fail          | false    | bool   | true                             | Fail if secrets founded                                  |
 | verbose       | false    | bool   | true                             | Show verbose output from scan                            |
