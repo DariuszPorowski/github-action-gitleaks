@@ -8,9 +8,9 @@ inputs:
     description: "Path to source (relative to $GITHUB_WORKSPACE) (default: $GITHUB_WORKSPACE)"
     required: false
   config:
-    description: "Config file path (relative to $GITHUB_WORKSPACE) (default build-in: /.gitleaks/GitleaksUdmCombo.toml)"
+    description: "Config file path (relative to $GITHUB_WORKSPACE) (default build-in: /.gitleaks/UDMSecretChecks.toml)"
     required: false
-    default: "/.gitleaks/GitleaksUdmCombo.toml"
+    default: "/.gitleaks/UDMSecretChecks.toml"
   report_format:
     description: "Report file format: json, csv, sarif (default: json)"
     required: false
