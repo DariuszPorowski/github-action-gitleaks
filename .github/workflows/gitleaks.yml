@@ -13,7 +13,7 @@ jobs:
 
       - name: Run Gitleaks
         id: gitleaks
-        uses: DariuszPorowski/github-action-gitleaks@v2
+        uses: DariuszPorowski/github-action-gitleaks@v2.0.4
         with:
           report_format: "sarif"
           fail: false
