@@ -55,8 +55,8 @@ echo "INPUT_LOG_LEVEL: ${INPUT_LOG_LEVEL}"
 echo "----------------------------------"
 
 echo "Setting Git safe directory (CVE-2022-24765)"
-echo "git config --global --add safe.directory ${INPUT_SOURCE}"
-git config --global --add safe.directory "${INPUT_SOURCE}"
+echo "git config --global --add safe.directory ${GITHUB_WORKSPACE}"
+git config --global --add safe.directory "${GITHUB_WORKSPACE}"
 echo "----------------------------------"
 
 command="gitleaks detect"
