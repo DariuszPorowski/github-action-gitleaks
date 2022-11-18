@@ -98,11 +98,11 @@ fi
 
 echo "----------------------------------"
 echo "${OUTPUT}"
-echo "::set-output name=output::${OUTPUT}"
-echo "::set-output name=report::gitleaks-report.${INPUT_REPORT_FORMAT}"
-echo "::set-output name=result::${GITLEAKS_RESULT}"
-echo "::set-output name=command::${command}"
-echo "::set-output name=exitcode::${exitcode}"
+echo "output=${OUTPUT}" >>$GITHUB_OUTPUT
+echo "report=gitleaks-report.${INPUT_REPORT_FORMAT}" >>$GITHUB_OUTPUT
+echo "result=${GITLEAKS_RESULT}" >>$GITHUB_OUTPUT
+echo "command=${command}" >>$GITHUB_OUTPUT
+echo "exitcode=${exitcode}" >>$GITHUB_OUTPUT
 
 echo "Gitleaks Summary: ${GITLEAKS_RESULT}" >>$GITHUB_STEP_SUMMARY
 echo "${OUTPUT}" >>$GITHUB_STEP_SUMMARY
