@@ -8,10 +8,11 @@ on:
       - ".gitleaks/**"
       - "Dockerfile"
       - "entrypoint.sh"
+      - "action.yml"
   # repository_dispatch:
   #   types: [gitleaks-release]
   schedule:
-    - cron: "* 2 * * *"
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
@@ -37,8 +38,8 @@ jobs:
         run: |
           gitleaks_latest_tag=$(gh api repos/zricethezav/gitleaks/releases/latest --jq .tag_name)
           gitleaks_latest_semver=$(echo ${gitleaks_latest_tag} | tr -d "v")
-          echo "::set-output name=tag::${gitleaks_latest_tag}"
-          echo "::set-output name=semver::${gitleaks_latest_semver}"
+          echo "tag=${gitleaks_latest_tag}" >>$GITHUB_OUTPUT
+          echo "semver=${gitleaks_latest_semver}" >>$GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -49,7 +50,7 @@ jobs:
           pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}/versions --jq '[.[] | select(.metadata.container.tags | index("${{ steps.gitleaks_latest_release.outputs.semver }}"))] | length')
           if [ $pkgs = 0 ]
           then
-            echo "::set-output name=upgrade::true"
+            echo "upgrade=true" >>$GITHUB_OUTPUT
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -58,7 +59,7 @@ jobs:
         id: upgrade
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_upgrade.outputs.upgrade == 'true')
         run: |
-          echo "::set-output name=upgrade::true"
+          echo "upgrade=true" >>$GITHUB_OUTPUT
 
       - name: Checkout Git repo
         if: steps.upgrade.outputs.upgrade == 'true'

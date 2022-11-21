@@ -2,7 +2,7 @@
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/DariuszPorowski/github-action-gitleaks)](https://github.com/DariuszPorowski/github-action-gitleaks/releases)
 
-This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethezav/gitleaks) in your CI/CD workflow.
+This GitHub Action allows you to run [Gitleaks](https://github.com/zricethezav/gitleaks) in your CI/CD workflow.
 
 > NOTE: v2 of this GitHub Action supports only the latest version of Gitleaks from v8 release.
 
@@ -43,15 +43,16 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 - name: Checkout
   uses: actions/checkout@v3
   with:
-    fetch-depth: "0"
+    fetch-depth: 0
 
 - name: Run Gitleaks
   id: gitleaks
   uses: DariuszPorowski/github-action-gitleaks@v2
   with:
-    report_format: "sarif"
+    report_format: sarif
     fail: false
 
+# (optional) It's just to see outputs from the Action
 - name: Get the output from the gitleaks step
   run: |
     echo "exitcode: ${{ steps.gitleaks.outputs.exitcode }}"
@@ -75,7 +76,7 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 - name: Checkout
   uses: actions/checkout@v3
   with:
-    fetch-depth: "0"
+    fetch-depth: 0
 
 - name: Run Gitleaks
   id: gitleaks
@@ -99,14 +100,14 @@ This GitHub Action provides a way to run [Gitleaks](https://github.com/zricethez
 
 ## Contributions
 
-Any feedback on `Gitleaks`, please reach out to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining [Gitleaks](https://github.com/zricethezav/gitleaks).
+If you have any feedback on `Gitleaks`, please reach out to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining [Gitleaks](https://github.com/zricethezav/gitleaks).
 
-Any feedback on the gitleaks config for Azure `UDMSecretChecks.toml` file is welcome. Follow Jesse Houwing's github repo - [gitleaks-azure](https://github.com/jessehouwing/gitleaks-azure).
+Any feedback on the Gitleaks config for Azure `UDMSecretChecks.toml` file is welcome. Follow Jesse Houwing's GitHub repo - [gitleaks-azure](https://github.com/jessehouwing/gitleaks-azure).
 
 Thanks to [C.J. May (@lawndoc)](https://github.com/lawndoc) for contributing 🤘
 
 Any feedback or contribution to this project is welcome!
 
-## How do I remove a secret from git's history?
+## How do I remove a secret from Git's history?
 
 [GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository) has a great article on this using the [BFG Repo Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).

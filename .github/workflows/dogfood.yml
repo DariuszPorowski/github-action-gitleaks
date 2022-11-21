@@ -1,4 +1,4 @@
-name: gitleaks
+name: dog food
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -9,13 +9,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: "0"
+          fetch-depth: 0
 
       - name: Run Gitleaks
         id: gitleaks
         uses: DariuszPorowski/github-action-gitleaks@v2
         with:
-          report_format: "sarif"
+          report_format: sarif
           fail: false
 
       - name: Get the output from the gitleaks step
