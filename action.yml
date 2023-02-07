@@ -1,4 +1,4 @@
-name: Gitleaks Scanner
+name: Gitleaks Scanner Testing
 description: Run Gitleaks in your CI/CD workflow
 branding:
   color: purple
