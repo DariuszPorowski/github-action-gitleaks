@@ -1,4 +1,4 @@
-name: Gitleaks Scanner Testing
+name: Gitleaks Scanner
 description: Run Gitleaks in your CI/CD workflow
 branding:
   color: purple
@@ -49,4 +49,4 @@ outputs:
 
 runs:
   using: "docker"
-  image: "docker://ghcr.io/lawndoc/github-action-gitleaks:latest"
+  image: "docker://ghcr.io/dariuszporowski/github-action-gitleaks:latest"
