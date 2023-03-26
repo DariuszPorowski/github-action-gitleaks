@@ -16,7 +16,10 @@ inputs:
     required: false
     default: "json"
   no_git:
-    description: "Treat git repos as plain directories and scan those file"
+    description: "Treat git repos as plain directories and scan those file (default: <not set>)"
+    required: false
+  baseline_path:
+    description: "Path to baseline with issues that can be ignored (relative to $GITHUB_WORKSPACE) (default: <not set>)"
     required: false
   redact:
     description: "Redact secrets from logs and stdout (default: true)"
@@ -31,7 +34,7 @@ inputs:
     required: false
     default: "true"
   log_level:
-    description: "Log level (debug, info, warn, error, fatal) (default: info)"
+    description: "Log level (trace, debug, info, warn, error, fatal) (default: info)"
     required: false
     default: "info"
 
@@ -49,4 +52,4 @@ outputs:
 
 runs:
   using: "docker"
-  image: "docker://ghcr.io/dariuszporowski/github-action-gitleaks:latest"
+  image: "Dockerfile"

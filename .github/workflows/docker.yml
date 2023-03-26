@@ -1,4 +1,4 @@
-name: docker
+name: Update docker
 
 on:
   push:
@@ -17,6 +17,7 @@ on:
 
 jobs:
   docker:
+    name: Cache latest docker image
     runs-on: ubuntu-latest
     steps:
       - name: Get repo owner
@@ -36,16 +37,16 @@ jobs:
       - name: Fetch Gitleaks the latest release
         id: gitleaks_latest_release
         run: |
-          gitleaks_latest_tag=$(gh api repos/zricethezav/gitleaks/releases/latest --jq .tag_name)
+          gitleaks_latest_tag=$(gh api repos/gitleaks/gitleaks/releases/latest --jq .tag_name)
           gitleaks_latest_semver=$(echo ${gitleaks_latest_tag} | tr -d "v")
           echo "tag=${gitleaks_latest_tag}" >>$GITHUB_OUTPUT
           echo "semver=${gitleaks_latest_semver}" >>$GITHUB_OUTPUT
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Check - upgrade Gitleaks or not
         id: gitleaks_upgrade
-        if: github.event_name == 'schedule'
+        if: ${{ github.event_name == 'schedule' }}
         run: |
           pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}/versions --jq '[.[] | select(.metadata.container.tags | index("${{ steps.gitleaks_latest_release.outputs.semver }}"))] | length')
           if [ $pkgs = 0 ]
@@ -53,34 +54,34 @@ jobs:
             echo "upgrade=true" >>$GITHUB_OUTPUT
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Check - upgrade Docker image or not
         id: upgrade
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_upgrade.outputs.upgrade == 'true')
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && steps.gitleaks_upgrade.outputs.upgrade == 'true') }}
         run: |
           echo "upgrade=true" >>$GITHUB_OUTPUT
 
       - name: Checkout Git repo
-        if: steps.upgrade.outputs.upgrade == 'true'
+        if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
         uses: actions/checkout@v3
 
       # - name: Update config to the release version
-      #   if: steps.upgrade.outputs.upgrade == 'true'
+      #   if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
       #   run: |
       #     curl --output "${GITHUB_WORKSPACE}/.gitleaks/gitleaks.toml" https://raw.githubusercontent.com/zricethezav/gitleaks/${{ steps.gitleaks_latest_release.outputs.tag }}/config/gitleaks.toml
 
       - name: Login to ghcr.io
         uses: docker/login-action@v2
-        if: steps.upgrade.outputs.upgrade == 'true'
+        if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
 
       - name: Prepare Docker image metadata
         uses: docker/metadata-action@v4
-        if: steps.upgrade.outputs.upgrade == 'true'
+        if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
         with:
           images: "ghcr.io/${{ steps.repo_owner.outputs.result }}/${{ steps.repo_name.outputs.result }}"
           flavor: latest=true
@@ -91,8 +92,8 @@ jobs:
         id: docker_image_metadata
 
       - name: Build and push Docker image
-        if: steps.upgrade.outputs.upgrade == 'true'
-        uses: docker/build-push-action@v3
+        if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
+        uses: docker/build-push-action@v4
         with:
           tags: ${{ steps.docker_image_metadata.outputs.tags }}
           labels: ${{ steps.docker_image_metadata.outputs.labels }}

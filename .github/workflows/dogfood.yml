@@ -1,10 +1,34 @@
-name: dog food
+name: dog food - tests
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request, pull_request_target, workflow_dispatch]
+
+# Allow one concurrent deployment
+concurrency:
+  group: ${{ github.event_name }}-${{ github.base_ref }}-${{ github.head_ref || github.event.number }}
+  cancel-in-progress: true
 
 jobs:
+  ghdiag:
+    name: Run GitHub diagnostic
+    if: ${{ vars.ACTIONS_RUNNER_DEBUG || vars.ACTIONS_STEP_DEBUG }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.debug('!!! START github START !!!')
+            core.info(JSON.stringify(github, null, '  '))
+            core.debug('!!! END github END !!!')
+
+            core.debug('!!! START context START !!!')
+            core.info(JSON.stringify(context, null, '  '))
+            core.debug('!!! END context END !!!')
+      - run: printenv
+
   gitleaks:
     runs-on: ubuntu-latest
+    name: Run Gitleaks
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -13,7 +37,7 @@ jobs:
 
       - name: Run Gitleaks
         id: gitleaks
-        uses: DariuszPorowski/github-action-gitleaks@v2
+        uses: ./
         with:
           report_format: sarif
           fail: false
@@ -27,7 +51,7 @@ jobs:
           echo "report: ${{ steps.gitleaks.outputs.report }}"
 
       - name: Upload SARIF report
-        if: steps.gitleaks.outputs.exitcode == 1
+        if: ${{ steps.gitleaks.outputs.exitcode == 1 }}
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.gitleaks.outputs.report }}
