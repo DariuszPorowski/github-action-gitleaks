@@ -64,6 +64,7 @@ if [ -f "${INPUT_CONFIG}" ]; then
   command+=$(arg '--config %s' "${INPUT_CONFIG}")
 fi
 
+command+=$(arg '--baseline-path %s' "${INPUT_BASELINE_PATH}")
 command+=$(arg '--report-format %s' "${INPUT_REPORT_FORMAT}")
 command+=$(arg '--redact' "${INPUT_REDACT}")
 command+=$(arg '--verbose' "${INPUT_VERBOSE}")

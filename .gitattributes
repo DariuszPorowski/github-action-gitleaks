@@ -1,5 +1,3 @@
-dist/** -diff linguist-generated=true
-
 # Set default behaviour to automatically normalize line endings.
 * text=auto
 
