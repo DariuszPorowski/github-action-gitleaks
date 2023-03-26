@@ -41,19 +41,19 @@ jobs:
           echo "tag=${gitleaks_latest_tag}" >>$GITHUB_OUTPUT
           echo "semver=${gitleaks_latest_semver}" >>$GITHUB_OUTPUT
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Check - upgrade Gitleaks or not
         id: gitleaks_upgrade
         if: github.event_name == 'schedule'
         run: |
-          pkgs=$(gh api /users/${{ github.repository_owner }}/packages/container/${{ github.repository.name }}/versions --jq '[.[] | select(.metadata.container.tags | index("${{ steps.gitleaks_latest_release.outputs.semver }}"))] | length')
+          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}/versions --jq '[.[] | select(.metadata.container.tags | index("${{ steps.gitleaks_latest_release.outputs.semver }}"))] | length')
           if [ $pkgs = 0 ]
           then
             echo "upgrade=true" >>$GITHUB_OUTPUT
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Check - upgrade Docker image or not
         id: upgrade
@@ -76,7 +76,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ github.token }}
 
       - name: Prepare Docker image metadata
         uses: docker/metadata-action@v4

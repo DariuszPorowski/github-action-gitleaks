@@ -25,9 +25,6 @@ jobs:
             core.info(JSON.stringify(context, null, '  '))
             core.debug('!!! END context END !!!')
       - run: printenv
-      - run: |
-          echo ${{ github.repository_owner }}
-          echo ${{ github.repository.name }}
 
   gitleaks:
     runs-on: ubuntu-latest
