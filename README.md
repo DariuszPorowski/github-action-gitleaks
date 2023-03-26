@@ -14,13 +14,13 @@ This GitHub Action allows you to run [Gitleaks](https://github.com/gitleaks/gitl
 | config        | false    | string | /.gitleaks/UDMSecretChecks.toml | Config file path (relative to $GITHUB_WORKSPACE)                                 |
 | baseline_path | false    | string | *not set*                       | Path to baseline with issues that can be ignored (relative to $GITHUB_WORKSPACE) |
 | report_format | false    | string | json                            | Report file format: json, csv, sarif                                             |
-| no_git        | false    | bool   | false                           | Treat git repos as plain directories and scan those file                         |
+| no_git        | false    | bool   | *not set*                       | Treat git repos as plain directories and scan those file                         |
 | redact        | false    | bool   | true                            | Redact secrets from log messages and leaks                                       |
 | fail          | false    | bool   | true                            | Fail if secrets founded                                                          |
 | verbose       | false    | bool   | true                            | Show verbose output from scan                                                    |
 | log_level     | false    | string | info                            | Log level (trace, debug, info, warn, error, fatal)                               |
 
-> NOTE: The solution provides predefined configuration (See: [.gitleaks](https://github.com/DariuszPorowski/github-action-gitleaks/tree/main/.gitleaks) path). You can override it by yours config using relative to `$GITHUB_WORKSPACE`.
+> __NOTE:__ The solution provides predefined configuration (See: [.gitleaks](https://github.com/DariuszPorowski/github-action-gitleaks/tree/main/.gitleaks) path). You can override it by yours config using relative to `$GITHUB_WORKSPACE`.
 
 ## Outputs
 
