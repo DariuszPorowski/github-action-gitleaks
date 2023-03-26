@@ -24,6 +24,7 @@ jobs:
             core.debug('!!! START context START !!!')
             core.info(JSON.stringify(context, null, '  '))
             core.debug('!!! END context END !!!')
+      - run: printenv
 
   gitleaks:
     runs-on: ubuntu-latest
