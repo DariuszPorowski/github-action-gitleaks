@@ -47,7 +47,7 @@ jobs:
         id: gitleaks_upgrade
         if: github.event_name == 'schedule'
         run: |
-          pkgs=$(gh api /users/${{ steps.repo_owner.outputs.result }}/packages/container/${{ steps.repo_name.outputs.result }}/versions --jq '[.[] | select(.metadata.container.tags | index("${{ steps.gitleaks_latest_release.outputs.semver }}"))] | length')
+          pkgs=$(gh api /users/${{ github.repository_owner }}/packages/container/${{ github.repository.name }}/versions --jq '[.[] | select(.metadata.container.tags | index("${{ steps.gitleaks_latest_release.outputs.semver }}"))] | length')
           if [ $pkgs = 0 ]
           then
             echo "upgrade=true" >>$GITHUB_OUTPUT
