@@ -2,7 +2,7 @@
 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/DariuszPorowski/github-action-gitleaks)](https://github.com/DariuszPorowski/github-action-gitleaks/releases)
 
-This GitHub Action allows you to run [Gitleaks](https://github.com/zricethezav/gitleaks) in your CI/CD workflow.
+This GitHub Action allows you to run [Gitleaks](https://github.com/gitleaks/gitleaks) in your CI/CD workflow.
 
 > NOTE: v2 of this GitHub Action supports only the latest version of Gitleaks from v8 release.
 
@@ -100,7 +100,7 @@ This GitHub Action allows you to run [Gitleaks](https://github.com/zricethezav/g
 
 ## Contributions
 
-If you have any feedback on `Gitleaks`, please reach out to [Zachary Rice](https://github.com/zricethezav) for creating and maintaining [Gitleaks](https://github.com/zricethezav/gitleaks).
+If you have any feedback on `Gitleaks`, please reach out to [Zachary Rice (@zricethezav)](https://github.com/zricethezav) for creating and maintaining [Gitleaks](https://github.com/gitleaks/gitleaks).
 
 Any feedback on the Gitleaks config for Azure `UDMSecretChecks.toml` file is welcome. Follow Jesse Houwing's GitHub repo - [gitleaks-azure](https://github.com/jessehouwing/gitleaks-azure).
 

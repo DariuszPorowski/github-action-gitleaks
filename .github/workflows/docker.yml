@@ -36,7 +36,7 @@ jobs:
       - name: Fetch Gitleaks the latest release
         id: gitleaks_latest_release
         run: |
-          gitleaks_latest_tag=$(gh api repos/zricethezav/gitleaks/releases/latest --jq .tag_name)
+          gitleaks_latest_tag=$(gh api repos/gitleaks/gitleaks/releases/latest --jq .tag_name)
           gitleaks_latest_semver=$(echo ${gitleaks_latest_tag} | tr -d "v")
           echo "tag=${gitleaks_latest_tag}" >>$GITHUB_OUTPUT
           echo "semver=${gitleaks_latest_semver}" >>$GITHUB_OUTPUT
