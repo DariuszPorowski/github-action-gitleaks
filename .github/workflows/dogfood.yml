@@ -1,6 +1,6 @@
 name: dog food - tests
 
-on: [push, pull_request, workflow_dispatch]
+on: [push, pull_request, pull_request_target, workflow_dispatch]
 
 # Allow one concurrent deployment
 concurrency:
@@ -28,6 +28,7 @@ jobs:
 
   gitleaks:
     runs-on: ubuntu-latest
+    name: Run Gitleaks
     steps:
       - name: Checkout
         uses: actions/checkout@v3
