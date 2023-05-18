@@ -1,15 +1,27 @@
+# Please see the documentation for all configuration options:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
 version: 2
 updates:
+  # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
+  # Configuration for github-actions
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
     commit-message:
-      prefix: "[github-actions] "
+      prefix: "⬆️ github-actions"
+      include: scope
+    labels:
+      - dependencies
 
+  # Configuration for docker
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: daily
     commit-message:
-      prefix: "[docker] "
+      prefix: "⬆️ docker"
+      include: scope
+    labels:
+      - dependencies

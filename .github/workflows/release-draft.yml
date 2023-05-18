@@ -1,0 +1,31 @@
+---
+name: Draft Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  draft-release:
+    name: Draft Release
+    permissions:
+      contents: write
+      pull-requests: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📝 Run Release Drafter
+        uses: release-drafter/release-drafter@v5
+        id: release-drafter
+        with:
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: ✍️ Post Summary
+        run: |
+          echo "${RELEASE_URL}"
+          echo "${RELEASE_URL}" >> "$GITHUB_STEP_SUMMARY"
+        env:
+          RELEASE_URL: ${{ steps.release-drafter.outputs.html_url }}
