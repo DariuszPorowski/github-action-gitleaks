@@ -77,7 +77,7 @@ if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
 
   base_sha=$(git rev-parse "refs/remotes/origin/${GITHUB_BASE_REF}")
   head_sha=$(git rev-list --no-merges -n 1 refs/remotes/pull/${GITHUB_REF_NAME})
-  command+=$(arg '--log-opts "%s"' "--no-merges --first-parent ${base_sha}...${head_sha}")
+  command+=$(arg '--log-opts "%s"' "--no-merges --first-parent ${base_sha}^..${head_sha}")
 else
   command+=$(arg '--source %s' "${INPUT_SOURCE}")
   command+=$(arg '--no-git' "${INPUT_NO_GIT}")
@@ -91,23 +91,26 @@ OUTPUT=$(eval "${command}")
 exitcode=$?
 
 if [ ${exitcode} -eq 0 ]; then
-  GITLEAKS_RESULT="SUCCESS! Your code is good to go"
+  GITLEAKS_RESULT="✅ SUCCESS! Your code is good to go"
 elif [ ${exitcode} -eq 1 ]; then
-  GITLEAKS_RESULT="STOP! Gitleaks encountered leaks or error"
+  GITLEAKS_RESULT="❌ STOP! Gitleaks encountered leaks or error"
 else
   GITLEAKS_RESULT="Gitleaks unknown error"
 fi
 
 echo "----------------------------------"
-echo "${OUTPUT}"
-echo "output=${OUTPUT}" >>$GITHUB_OUTPUT
-echo "report=gitleaks-report.${INPUT_REPORT_FORMAT}" >>$GITHUB_OUTPUT
-echo "result=${GITLEAKS_RESULT}" >>$GITHUB_OUTPUT
-echo "command=${command}" >>$GITHUB_OUTPUT
-echo "exitcode=${exitcode}" >>$GITHUB_OUTPUT
+echo -e "${OUTPUT}"
 
-echo "Gitleaks Summary: ${GITLEAKS_RESULT}" >>$GITHUB_STEP_SUMMARY
-echo "${OUTPUT}" >>$GITHUB_STEP_SUMMARY
+EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+echo "output<<$EOF" >>"$GITHUB_OUTPUT"
+echo -e "${OUTPUT}" >>"$GITHUB_OUTPUT"
+echo "$EOF" >>"$GITHUB_OUTPUT"
+echo "report=gitleaks-report.${INPUT_REPORT_FORMAT}" >>"$GITHUB_OUTPUT"
+echo "result=${GITLEAKS_RESULT}" >>"$GITHUB_OUTPUT"
+echo "command=${command}" >>"$GITHUB_OUTPUT"
+echo "exitcode=${exitcode}" >>"$GITHUB_OUTPUT"
+echo -e "Gitleaks Summary: ${GITLEAKS_RESULT}\n" >>"$GITHUB_STEP_SUMMARY"
+echo -e "${OUTPUT}" >>"$GITHUB_STEP_SUMMARY"
 
 if [ ${exitcode} -eq 0 ]; then
   echo "::notice::${GITLEAKS_RESULT}"
