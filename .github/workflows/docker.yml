@@ -64,7 +64,7 @@ jobs:
 
       - name: Checkout Git repo
         if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # - name: Update config to the release version
       #   if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
