@@ -80,7 +80,7 @@ jobs:
           password: ${{ github.token }}
 
       - name: Prepare Docker image metadata
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
         with:
           images: "ghcr.io/${{ steps.repo_owner.outputs.result }}/${{ steps.repo_name.outputs.result }}"
