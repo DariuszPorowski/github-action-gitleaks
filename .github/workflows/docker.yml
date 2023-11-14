@@ -21,14 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get repo owner
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: repo_owner
         with:
           result-encoding: string
           script: return context.repo.owner.toLowerCase()
 
       - name: Get repo name
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: repo_name
         with:
           result-encoding: string
@@ -72,7 +72,7 @@ jobs:
       #     curl --output "${GITHUB_WORKSPACE}/.gitleaks/gitleaks.toml" https://raw.githubusercontent.com/zricethezav/gitleaks/${{ steps.gitleaks_latest_release.outputs.tag }}/config/gitleaks.toml
 
       - name: Login to ghcr.io
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
         with:
           registry: ghcr.io
@@ -93,7 +93,7 @@ jobs:
 
       - name: Build and push Docker image
         if: ${{ steps.upgrade.outputs.upgrade == 'true' }}
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           tags: ${{ steps.docker_image_metadata.outputs.tags }}
           labels: ${{ steps.docker_image_metadata.outputs.labels }}
