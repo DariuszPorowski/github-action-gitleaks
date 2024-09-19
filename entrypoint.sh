@@ -40,7 +40,7 @@ INPUT_REDACT=$(default 'true' 'false' "${INPUT_REDACT}" 'true')
 INPUT_FAIL=$(default 'true' 'false' "${INPUT_FAIL}" 'true')
 INPUT_VERBOSE=$(default 'true' 'false' "${INPUT_VERBOSE}" 'true')
 INPUT_LOG_LEVEL=$(default 'info' "${INPUT_LOG_LEVEL}" "${INPUT_LOG_LEVEL}" 'true')
-INPUT_EXIT_CODE=$(default 1 "${INPUT_EXIT_CODE}" "${INPUT_EXIT_CODE}" 'true')
+INPUT_EXIT_CODE=$(default 1 0 "${INPUT_EXIT_CODE}" 'true')
 
 echo "----------------------------------"
 echo "INPUT PARAMETERS"
