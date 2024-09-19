@@ -40,6 +40,7 @@ INPUT_REDACT=$(default 'true' 'false' "${INPUT_REDACT}" 'true')
 INPUT_FAIL=$(default 'true' 'false' "${INPUT_FAIL}" 'true')
 INPUT_VERBOSE=$(default 'true' 'false' "${INPUT_VERBOSE}" 'true')
 INPUT_LOG_LEVEL=$(default 'info' "${INPUT_LOG_LEVEL}" "${INPUT_LOG_LEVEL}" 'true')
+INPUT_EXIT_CODE=$(default 1 "${INPUT_EXIT_CODE}" "${INPUT_EXIT_CODE}" 'true')
 
 echo "----------------------------------"
 echo "INPUT PARAMETERS"
@@ -53,6 +54,7 @@ echo "INPUT_REDACT: ${INPUT_REDACT}"
 echo "INPUT_FAIL: ${INPUT_FAIL}"
 echo "INPUT_VERBOSE: ${INPUT_VERBOSE}"
 echo "INPUT_LOG_LEVEL: ${INPUT_LOG_LEVEL}"
+echo "INPUT_EXIT_CODE: ${INPUT_EXIT_CODE}"
 echo "----------------------------------"
 
 echo "Setting Git safe directory (CVE-2022-24765)"
@@ -71,6 +73,7 @@ command+=$(arg '--redact' "${INPUT_REDACT}")
 command+=$(arg '--verbose' "${INPUT_VERBOSE}")
 command+=$(arg '--log-level %s' "${INPUT_LOG_LEVEL}")
 command+=$(arg '--report-path %s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_REPORT_FORMAT}")
+command+=$(arg '--exit-code %d' "${INPUT_EXIT_CODE}")
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
   command+=$(arg '--source %s' "${GITHUB_WORKSPACE}")
