@@ -37,6 +37,10 @@ inputs:
     description: "Log level (trace, debug, info, warn, error, fatal) (default: info)"
     required: false
     default: "info"
+  exit-code:
+    description: "exit code when leaks have been encountered (default 1)"
+    required: false
+    default: 1
 
 outputs:
   exitcode: # id of output
