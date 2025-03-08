@@ -86,7 +86,7 @@ if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
   command+=$(arg '--source %s' "${GITHUB_WORKSPACE}")
 
   base_sha=$(git rev-parse "refs/remotes/origin/${GITHUB_BASE_REF}")
-  head_sha=$(git rev-list --no-merges -n 1 "refs/remotes/pull/${GITHUB_REF}")
+  head_sha=$(git rev-list --no-merges -n 1 "refs/remotes/pull/${GITHUB_REF_NAME}")
   command+=$(arg '--log-opts "%s"' "--no-merges --first-parent ${base_sha}...${head_sha}")
 else
   command+=$(arg '--log-opts "%s"' "${INPUT_LOG_OPTS}")
