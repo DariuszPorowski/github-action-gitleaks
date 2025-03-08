@@ -45,7 +45,7 @@ inputs:
     description: "Git log options (default: <not set>)"
     required: false
   max_decode_depth:
-    description: "Allow recursive decoding up to this depth (default "0", no decoding is done)"
+    description: "Allow recursive decoding up to this depth (default 0, no decoding is done)"
     required: false
     default: "0"
   follow_symlinks:

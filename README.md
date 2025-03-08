@@ -24,6 +24,7 @@ This GitHub Action allows you to run [Gitleaks](https://github.com/gitleaks/gitl
 | exit_code        |  false   |  int   | 1                               | Exit code when leaks have been encountered                                       |
 | log_opts         |  false   | string | *not set*                       | Exit code when leaks have been encountered                                       |
 | max_decode_depth |  false   |  int   | 0                               | Allow recursive decoding up to this depth (default "0", no decoding is done)     |
+| follow_symlinks  |  false   |  bool  | false                           | Scan files that are symlinks to other files                                      |
 
 > ⚠️ The solution provides predefined configuration (See: [.gitleaks](https://github.com/DariuszPorowski/github-action-gitleaks/tree/main/.gitleaks) path). You can override it by yours config using relative to `$GITHUB_WORKSPACE`.
 
