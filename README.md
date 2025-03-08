@@ -10,17 +10,20 @@ This GitHub Action allows you to run [Gitleaks](https://github.com/gitleaks/gitl
 
 ## Inputs
 
-| Name          | Required |  Type  | Default value                   | Description                                                                      |
-|---------------|:--------:|:------:|---------------------------------|----------------------------------------------------------------------------------|
-| source        |  false   | string | $GITHUB_WORKSPACE               | Path to source (relative to $GITHUB_WORKSPACE)                                   |
-| config        |  false   | string | /.gitleaks/UDMSecretChecks.toml | Config file path (relative to $GITHUB_WORKSPACE)                                 |
-| baseline_path |  false   | string | *not set*                       | Path to baseline with issues that can be ignored (relative to $GITHUB_WORKSPACE) |
-| report_format |  false   | string | json                            | Report file format: json, csv, sarif                                             |
-| no_git        |  false   |  bool  | *not set*                       | Treat git repos as plain directories and scan those file                         |
-| redact        |  false   |  bool  | true                            | Redact secrets from log messages and leaks                                       |
-| fail          |  false   |  bool  | true                            | Fail if secrets founded                                                          |
-| verbose       |  false   |  bool  | true                            | Show verbose output from scan                                                    |
-| log_level     |  false   | string | info                            | Log level (trace, debug, info, warn, error, fatal)                               |
+| Name             | Required |  Type  | Default value                   | Description                                                                      |
+|------------------|:--------:|:------:|---------------------------------|----------------------------------------------------------------------------------|
+| source           |  false   | string | $GITHUB_WORKSPACE               | Path to source (relative to $GITHUB_WORKSPACE)                                   |
+| config           |  false   | string | /.gitleaks/UDMSecretChecks.toml | Config file path (relative to $GITHUB_WORKSPACE)                                 |
+| baseline_path    |  false   | string | *not set*                       | Path to baseline with issues that can be ignored (relative to $GITHUB_WORKSPACE) |
+| report_format    |  false   | string | json                            | Report file format: json, csv, sarif                                             |
+| no_git           |  false   |  bool  | *not set*                       | Treat git repos as plain directories and scan those file                         |
+| redact           |  false   |  bool  | true                            | Redact secrets from log messages and leaks                                       |
+| fail             |  false   |  bool  | true                            | Fail if secrets founded                                                          |
+| verbose          |  false   |  bool  | true                            | Show verbose output from scan                                                    |
+| log_level        |  false   | string | info                            | Log level (trace, debug, info, warn, error, fatal)                               |
+| exit_code        |  false   |  int   | 1                               | Exit code when leaks have been encountered                                       |
+| log_opts         |  false   | string | *not set*                       | Exit code when leaks have been encountered                                       |
+| max_decode_depth |  false   |  int   | 0                               | Allow recursive decoding up to this depth (default "0", no decoding is done)     |
 
 > ⚠️ The solution provides predefined configuration (See: [.gitleaks](https://github.com/DariuszPorowski/github-action-gitleaks/tree/main/.gitleaks) path). You can override it by yours config using relative to `$GITHUB_WORKSPACE`.
 
@@ -36,7 +39,7 @@ This GitHub Action allows you to run [Gitleaks](https://github.com/gitleaks/gitl
 
 ## Example usage
 
-> ⚠️ You must use `actions/checkout` before the `github-action-gitleaks` step. If you are using `actions/checkout@v3` you must specify a commit depth other than the default which is 1.
+> ⚠️ You must use `actions/checkout` before the `github-action-gitleaks` step. If you are using `actions/checkout@v4` you must specify a commit depth other than the default which is 1.
 >
 > Using a `fetch-depth` of '0' clones the entire history. If you want to do a more efficient clone, use '2', but that is not guaranteed to work with pull requests.
 
@@ -62,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -73,7 +76,7 @@ jobs:
           fail: false
 
       - name: Post PR comment
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         if: ${{ steps.gitleaks.outputs.exitcode == 1 && github.event_name == 'pull_request' }}
         with:
           github-token: ${{ github.token }}
@@ -101,7 +104,7 @@ jobs:
 
 ```yaml
 - name: Checkout
-  uses: actions/checkout@v3
+  uses: actions/checkout@v4
   with:
     fetch-depth: 0
 
@@ -126,7 +129,7 @@ jobs:
 
 - name: Upload Gitleaks SARIF report to code scanning service
   if: ${{ steps.gitleaks.outputs.exitcode == 1 }}
-  uses: github/codeql-action/upload-sarif@v2
+  uses: github/codeql-action/upload-sarif@v3
   with:
     sarif_file: ${{ steps.gitleaks.outputs.report }}
 ```
@@ -137,7 +140,7 @@ jobs:
 
 ```yaml
 - name: Checkout
-  uses: actions/checkout@v3
+  uses: actions/checkout@v4
   with:
     fetch-depth: 0
 
@@ -148,7 +151,7 @@ jobs:
     config: MyGitleaksConfigs/MyGitleaksConfig.toml
 
 - name: Upload Gitleaks JSON report to artifacts
-  uses: actions/upload-artifact@v3
+  uses: actions/upload-artifact@v4
   if: failure()
   with:
     name: gitleaks
