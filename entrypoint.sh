@@ -79,7 +79,7 @@ command+=$(arg '--verbose' "${INPUT_VERBOSE}")
 command+=$(arg '--log-level %s' "${INPUT_LOG_LEVEL}")
 command+=$(arg '--report-path %s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_REPORT_FORMAT}")
 command+=$(arg '--exit-code %d' "${INPUT_EXIT_CODE}")
-command+=$(arg '--max_decode_depth %d' "${INPUT_MAX_DECODE_DEPTH}")
+command+=$(arg '--max-decode-depth %d' "${INPUT_MAX_DECODE_DEPTH}")
 command+=$(arg '--follow-symlinks' "${INPUT_FOLLOW_SYMLINKS}")
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
