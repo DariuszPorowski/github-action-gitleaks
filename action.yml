@@ -38,9 +38,20 @@ inputs:
     required: false
     default: "info"
   exit_code:
-    description: "exit code when leaks have been encountered (default 1)"
+    description: "Exit code when leaks have been encountered (default 1)"
     required: false
     default: "1"
+  log_opts:
+    description: "Git log options (default: <not set>)"
+    required: false
+  max_decode_depth:
+    description: "Allow recursive decoding up to this depth (default 0, no decoding is done)"
+    required: false
+    default: "0"
+  follow_symlinks:
+    description: "Scan files that are symlinks to other files (default: false)"
+    required: false
+    default: "false"
 
 outputs:
   exitcode: # id of output

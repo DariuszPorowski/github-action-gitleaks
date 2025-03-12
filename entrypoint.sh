@@ -41,6 +41,8 @@ INPUT_FAIL=$(default 'true' 'false' "${INPUT_FAIL}" 'true')
 INPUT_VERBOSE=$(default 'true' 'false' "${INPUT_VERBOSE}" 'true')
 INPUT_LOG_LEVEL=$(default 'info' "${INPUT_LOG_LEVEL}" "${INPUT_LOG_LEVEL}" 'true')
 INPUT_EXIT_CODE=$(default '1' '0' "${INPUT_EXIT_CODE}" 'true')
+INPUT_MAX_DECODE_DEPTH=$(default '0' '0' "${INPUT_MAX_DECODE_DEPTH}" 'true')
+INPUT_FOLLOW_SYMLINKS=$(default 'false' 'true' "${INPUT_FOLLOW_SYMLINKS}" 'true')
 
 echo "----------------------------------"
 echo "INPUT PARAMETERS"
@@ -55,6 +57,9 @@ echo "INPUT_FAIL: ${INPUT_FAIL}"
 echo "INPUT_VERBOSE: ${INPUT_VERBOSE}"
 echo "INPUT_LOG_LEVEL: ${INPUT_LOG_LEVEL}"
 echo "INPUT_EXIT_CODE: ${INPUT_EXIT_CODE}"
+echo "INPUT_LOG_OPTS: ${INPUT_LOG_OPTS}"
+echo "INPUT_MAX_DECODE_DEPTH: ${INPUT_MAX_DECODE_DEPTH}"
+echo "INPUT_FOLLOW_SYMLINKS: ${INPUT_FOLLOW_SYMLINKS}"
 echo "----------------------------------"
 
 echo "Setting Git safe directory (CVE-2022-24765)"
@@ -74,14 +79,17 @@ command+=$(arg '--verbose' "${INPUT_VERBOSE}")
 command+=$(arg '--log-level %s' "${INPUT_LOG_LEVEL}")
 command+=$(arg '--report-path %s' "${GITHUB_WORKSPACE}/gitleaks-report.${INPUT_REPORT_FORMAT}")
 command+=$(arg '--exit-code %d' "${INPUT_EXIT_CODE}")
+command+=$(arg '--max-decode-depth %d' "${INPUT_MAX_DECODE_DEPTH}")
+command+=$(arg '--follow-symlinks' "${INPUT_FOLLOW_SYMLINKS}")
 
 if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
   command+=$(arg '--source %s' "${GITHUB_WORKSPACE}")
 
   base_sha=$(git rev-parse "refs/remotes/origin/${GITHUB_BASE_REF}")
-  head_sha=$(git rev-list --no-merges -n 1 refs/remotes/pull/${GITHUB_REF_NAME})
+  head_sha=$(git rev-list --no-merges -n 1 "refs/remotes/pull/${GITHUB_REF_NAME}")
   command+=$(arg '--log-opts "%s"' "--no-merges --first-parent ${base_sha}...${head_sha}")
 else
+  command+=$(arg '--log-opts "%s"' "${INPUT_LOG_OPTS}")
   command+=$(arg '--source %s' "${INPUT_SOURCE}")
   command+=$(arg '--no-git' "${INPUT_NO_GIT}")
 fi
