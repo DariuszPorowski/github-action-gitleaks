@@ -21,14 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get repo owner
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: repo_owner
         with:
           result-encoding: string
           script: return context.repo.owner.toLowerCase()
 
       - name: Get repo name
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         id: repo_name
         with:
           result-encoding: string
