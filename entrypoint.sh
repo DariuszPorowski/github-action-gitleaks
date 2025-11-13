@@ -82,11 +82,11 @@ command+=$(arg '--exit-code %d' "${INPUT_EXIT_CODE}")
 command+=$(arg '--max-decode-depth %d' "${INPUT_MAX_DECODE_DEPTH}")
 command+=$(arg '--follow-symlinks' "${INPUT_FOLLOW_SYMLINKS}")
 
-if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" ]]; then
   command+=$(arg '--source %s' "${GITHUB_WORKSPACE}")
 
   base_sha=$(git rev-parse "refs/remotes/origin/${GITHUB_BASE_REF}")
-  head_sha=$(git rev-list --no-merges -n 1 "refs/remotes/pull/${GITHUB_REF_NAME}")
+  head_sha="${GITHUB_SHA}"
   command+=$(arg '--log-opts "%s"' "--no-merges --first-parent ${base_sha}...${head_sha}")
 else
   command+=$(arg '--log-opts "%s"' "${INPUT_LOG_OPTS}")
