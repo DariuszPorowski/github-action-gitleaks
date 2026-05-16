@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: 🥇 Update release to the latest
         id: gh-release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           prerelease: false
           token: ${{ github.token }}
